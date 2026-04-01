@@ -7,13 +7,13 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.List
-import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -52,10 +52,10 @@ fun DashboardEkran(navController: NavController, dao: RacunDao) {
             // Lijeva strana: Logo + ime
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Icon(
-                    imageVector = androidx.compose.material.icons.Icons.Default.Email,
+                    painter = painterResource(id = R.drawable.email),
                     contentDescription = "Logo",
                     tint = GlavnaBoja,
-                    modifier = Modifier.size(34.dp)
+                    modifier = Modifier.size(42.dp)
                 )
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(

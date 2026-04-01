@@ -3,12 +3,12 @@ package com.popovic.postonosa
 import android.content.SharedPreferences
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.icons.filled.Email
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -26,7 +26,7 @@ fun LoginEkran(navController: NavController, prefs: SharedPreferences) {
     ) {
         // LOGO I NAZIV APLIKACIJE NA SREDINI
         Icon(
-            imageVector = androidx.compose.material.icons.Icons.Default.Email,
+            painter = painterResource(id = R.drawable.email),
             contentDescription = "Logo",
             tint = GlavnaBoja,
             modifier = Modifier.size(80.dp).padding(bottom = 8.dp)
