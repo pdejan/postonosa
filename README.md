@@ -9,9 +9,9 @@
 * **Trenutna stranka:** Aplikacija pokazuje stanje za naplatu trenutne stranke.
 * **Eksport izvještaja:** Na kraju rada, jednim klikom generišite **PDF** i/ili **TXT** izvještaj (Pregled uplata) koji se automatski spašava u organizovane, datirane foldere na uređaju i spreman je za printanje.
 * **Podešavanja:** Aplikacija nudi par opcija za podešavanje i to:
-* 1. Modifikacija i unos usluga po želji.
-  2. Izbor formata Pregleda uplata koji se generiše.
-  3. Automatsko ažuriranje provizije. (Zahtjeva internet konekciju)
+ 1. Modifikacija i unos usluga po želji.
+ 2. Izbor formata Pregleda uplata koji se generiše.
+ 3. Automatsko ažuriranje provizije. (Zahtjeva internet konekciju)
 * **Sigurnost:** Aplikacija radi potpuno offline, ne prikuplja nikakve podatke pa čak ni analitike bilo o vama, vašem telefonu ili o uplatama koje u nju unesete. Ne komunicira sa vanjskim serverom. Sva pohrana podata se odvija na samom uređaju i nikada ga ne napušta. Aplikacija **mora** imati pristup internetu samo kada morate/želite ažurirati proviziju koja se obračunava.
 
 ## Informacije o aplikaciji i kodu
