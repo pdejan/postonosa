@@ -17,7 +17,7 @@
 ## Informacije o aplikaciji i kodu
 * **Automatsko ažuriranje provizije:** Za računanje provizije kao i stope, aplikacija gleda fajl **naknada.json** u assets folderu. Da bi se omogućilo jednostavno ažuriranje provizije na klik jednog dugmeta u podešavanjima bez potrebnog ažuriranja same aplikacije, taj JSON fajl mora biti hostan negdje online, da bi ga aplikacija mogla povući i spasiti ukoliko je potrebno ažurirati samu proviziju. Varijabla u PodesavanjaEkran.kt mora sadržavati tačnu putanju ka datom fajlu.
 * **Boje:** Tema aplikacije je urađena u dvije akcentne boje, GlavnaBoja (u ovom slučaju žuta) i SporednaBoja (crna). Ukoliko se mjenja akcentni izgled aplikacije dovoljno je promjeniti ove dvije varijable u Boje.kt
-* **Resursi trećih strana:** Ikona aplikacije je preuzeta sa **FlatIcon**. Ja posjedujem licencu za ovu primjenu (aplikacija), ali ukoliko kompajlate kod za neku drugu upotrebu obavezno je navođenje autora kako slijedi: Email icons created by [Freepik - Flaticon](https://www.flaticon.com/free-icons/email).  
+* **Resursi trećih lica:** Ikona aplikacije je preuzeta sa **FlatIcon**. Ja posjedujem licencu za ovu primjenu (aplikacija), ali ukoliko kompajlate kod za neku drugu upotrebu obavezno je navođenje autora kako slijedi: Email icons created by [Freepik - Flaticon](https://www.flaticon.com/free-icons/email).  
 
 ## Verzija
 Trenutna verzija: **v1.3**
