@@ -17,6 +17,7 @@
 ## Informacije o aplikaciji i kodu
 * **Automatsko ažuriranje provizije:** Za računanje provizije kao i stope, aplikacija gleda fajl **naknada.json** u assets folderu. Da bi se omogućilo jednostavno ažuriranje provizije na klik jednog dugmeta u podešavanjima bez potrebnog ažuriranja same aplikacije taj json fajl mora biti hostan negdje online, te varijabla u PodesavanjaEkran.kt mora sadržavati tačnu putanju ka datom fajlu.
 * **Boje:** Tema aplikacije je urađena u dvije akcentne boje, GlavnaBoja (u ovom slučaju žuta) i SporednaBoja (crna). Ukoliko se mjenja akcentni izgled aplikacije dovoljno je promjeniti ove dvije varijable u Boje.kt
+* **Resursi trećih strana:** Ikona aplikacije je preuzeta sa **FlatIcon**. Ja posjedujem licencu za ovu primjenu (aplikacija), ali ukoliko kompajlate kod za neku drugu upotrebu obavezno je navođenje autora kako slijedi: Email icons created by [Freepik - Flaticon][https://www.flaticon.com/free-icons/email]  
 
 ## Verzija
 Trenutna verzija: **v1.3**
@@ -54,6 +55,7 @@ Trenutna verzija: **v1.3**
 ## App and Code Information
 * **Automatic Commission Update:** To calculate the commission and rates, the app reads the **naknada.json** file located in the assets folder. To enable simple commission updates with a single click in the settings without needing to update the app itself, this JSON file must be hosted online, and the corresponding variable in PodesavanjaEkran.kt must contain the exact URL path to that file.
 * **Colors:** The app's theme is built around two accent colors: GlavnaBoja (Main Color, yellow in this case) and SporednaBoja (Secondary Color, black). If you want to change the app's visual identity, you simply need to modify these two variables in Boje.kt.
+* **Third-party assets:** The application icon was sourced from **Flaticon**. I hold a valid license for its use in this specific application. However, if you recompile the code for any other purpose, attribution is required as follows: Email icons created by [Freepik - Flaticon][https://www.flaticon.com/free-icons/email]  
 
 ## Version
 Current version: **v1.3**
