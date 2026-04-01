@@ -21,13 +21,19 @@
 ## Verzija
 Trenutna verzija: **v1.3**
 
-![Login screen](https://raw.githubusercontent.com/pdejan/dejan.ba/refs/heads/main/img/postonosa_login.jpg)
-![Dashboard](https://raw.githubusercontent.com/pdejan/dejan.ba/refs/heads/main/img/postonosa_main.jpg)
-![Entry](https://raw.githubusercontent.com/pdejan/dejan.ba/refs/heads/main/img/postonosa_entry.jpg)
-![Overview](https://raw.githubusercontent.com/pdejan/dejan.ba/refs/heads/main/img/postonosa_overview.jpg)
-![End](https://raw.githubusercontent.com/pdejan/dejan.ba/refs/heads/main/img/postonosa_end.jpg)
-![Settings](https://raw.githubusercontent.com/pdejan/dejan.ba/refs/heads/main/img/postonosa_settings_1.jpg)
-![Settings](https://raw.githubusercontent.com/pdejan/dejan.ba/refs/heads/main/img/postonosa_settings_2.jpg)
+<h2 align="center">Screenshots</h2>
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/pdejan/dejan.ba/refs/heads/main/img/postonosa_login.jpg" width="32%" alt="Login">
+  <img src="https://raw.githubusercontent.com/pdejan/dejan.ba/refs/heads/main/img/postonosa_main.jpg" width="32%" alt="Dashboard">
+  <img src="https://raw.githubusercontent.com/pdejan/dejan.ba/refs/heads/main/img/postonosa_entry.jpg" width="32%" alt="Entry">
+</p>
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/pdejan/dejan.ba/refs/heads/main/img/postonosa_overview.jpg" width="32%" alt="Overview">
+  <img src="https://raw.githubusercontent.com/pdejan/dejan.ba/refs/heads/main/img/postonosa_end.jpg" width="32%" alt="End">
+  <img src="https://raw.githubusercontent.com/pdejan/dejan.ba/refs/heads/main/img/postonosa_settings_1.jpg" width="32%" alt="Settings">
+</p>
 
 # ENGLISH
 
