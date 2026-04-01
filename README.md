@@ -21,6 +21,14 @@
 ## Verzija
 Trenutna verzija: **v1.3**
 
+![Login screen](https://raw.githubusercontent.com/pdejan/dejan.ba/refs/heads/main/img/postonosa_login.jpg)
+![Dashboard](https://raw.githubusercontent.com/pdejan/dejan.ba/refs/heads/main/img/postonosa_main.jpg)
+![Entry](https://raw.githubusercontent.com/pdejan/dejan.ba/refs/heads/main/img/postonosa_entry.jpg)
+![Overview](https://raw.githubusercontent.com/pdejan/dejan.ba/refs/heads/main/img/postonosa_overview.jpg)
+![End](https://raw.githubusercontent.com/pdejan/dejan.ba/refs/heads/main/img/postonosa_end.jpg)
+![Settings](https://raw.githubusercontent.com/pdejan/dejan.ba/refs/heads/main/img/postonosa_settings_1.jpg)
+![Settings](https://raw.githubusercontent.com/pdejan/dejan.ba/refs/heads/main/img/postonosa_settings_2.jpg)
+
 # ENGLISH
 
 * **Poštonoša** is an app created specifically for postmen in Bosnia and Herzegovina (and the region?). The application allows for simple logging and entry of utility bill payments within a delivery area, offering a few convenient perks, all of this, of course, completely offline.
