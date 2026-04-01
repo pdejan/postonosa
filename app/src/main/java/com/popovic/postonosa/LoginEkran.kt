@@ -13,6 +13,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.foundation.text.KeyboardOptions
 
 @Composable
 fun LoginEkran(navController: NavController, prefs: SharedPreferences) {
@@ -42,8 +44,15 @@ fun LoginEkran(navController: NavController, prefs: SharedPreferences) {
         Spacer(modifier = Modifier.height(32.dp))
         OutlinedTextField(
             value = radnikId,
-            onValueChange = { radnikId = it },
+            onValueChange = { noviUnos ->
+                val samoBrojevi = noviUnos.filter {it.isDigit()}
+                if (samoBrojevi.length <= 10){
+                   radnikId = samoBrojevi
+                }
+            },
             label = { Text("Šifra radnika", color = Color.Gray) },
+            singleLine = true,
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
             colors = OutlinedTextFieldDefaults.colors(
                 focusedBorderColor = GlavnaBoja,
                 focusedLabelColor = GlavnaBoja,
@@ -54,8 +63,14 @@ fun LoginEkran(navController: NavController, prefs: SharedPreferences) {
         Spacer(modifier = Modifier.height(8.dp))
         OutlinedTextField(
             value = imePrezime,
-            onValueChange = { imePrezime = it },
+            onValueChange = { noviUnos ->
+                val bezNovogReda = noviUnos.replace("\n", "")
+                if (bezNovogReda.length <= 30){
+                    imePrezime = bezNovogReda
+                }
+            },
             label = { Text("Ime i prezime", color = Color.Gray) },
+            singleLine = true,
             colors = OutlinedTextFieldDefaults.colors(
                 focusedBorderColor = GlavnaBoja,
                 focusedLabelColor = GlavnaBoja,
@@ -66,8 +81,14 @@ fun LoginEkran(navController: NavController, prefs: SharedPreferences) {
         Spacer(modifier = Modifier.height(8.dp))
         OutlinedTextField(
             value = posta,
-            onValueChange = { posta = it },
+            onValueChange = { noviUnos ->
+                val bezNovogReda = noviUnos.replace("\n", "")
+                if (bezNovogReda.length <= 30) {
+                    posta = bezNovogReda
+                }
+            },
             label = { Text("Pošta (npr. 74101 Doboj)", color = Color.Gray) },
+            singleLine = true,
             colors = OutlinedTextFieldDefaults.colors(
                 focusedBorderColor = GlavnaBoja,
                 focusedLabelColor = GlavnaBoja,
