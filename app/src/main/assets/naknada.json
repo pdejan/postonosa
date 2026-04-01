@@ -1,0 +1,13 @@
+{
+  "naknada": [
+    { "do_iznosa": 50.0, "fiksno": 1.80, "procenat": 0.0 },
+    { "do_iznosa": 100.0, "fiksno": 2.10, "procenat": 0.0 },
+    { "do_iznosa": 300.0, "fiksno": 2.40, "procenat": 0.0 },
+    { "do_iznosa": 500.0, "fiksno": 2.70, "procenat": 0.0 },
+    { "do_iznosa": 1000.0, "fiksno": 3.00, "procenat": 0.0 },
+    { "do_iznosa": 2000.0, "fiksno": 3.50, "procenat": 0.0 },
+    { "do_iznosa": 5000.0, "fiksno": 4.00, "procenat": 0.0 },
+    { "do_iznosa": 10000.0, "fiksno": 5.00, "procenat": 0.0 },
+    { "do_iznosa": 9999999.0, "fiksno": 0.0, "procenat": 0.10 }
+  ]
+}

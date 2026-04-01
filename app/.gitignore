@@ -1,0 +1,23 @@
+# Android Studio / IntelliJ fajlovi
+.idea/
+*.iml
+.gradle/
+/local.properties
+/.navigation/
+.DS_Store
+
+# Build folderi (Glavni i po modulima)
+build/
+app/build/
+captures/
+
+# Keš i privremeni fajlovi
+.externalNativeBuild/
+.cxx/
+*.pyc
+
+# Logovi
+*.log
+
+# Google Play Services (ako ih ikada dodaš)
+google-services.json
