@@ -10,8 +10,9 @@
 * **Eksport izvještaja:** Na kraju rada, jednim klikom generišite **PDF** i/ili **TXT** izvještaj (Pregled uplata) koji se automatski spašava u organizovane, datirane foldere na uređaju i spreman je za printanje.
 * **Podešavanja:** Aplikacija nudi par opcija za podešavanje i to:
  1. Modifikacija i unos usluga po želji.
- 2. Izbor formata Pregleda uplata koji se generiše.
- 3. Automatsko ažuriranje provizije. (Zahtjeva internet konekciju)
+ 2. Pošalji pregled uplata emailom 
+ 3. Izbor formata Pregleda uplata koji se generiše.
+ 4. Automatsko ažuriranje provizije. (Zahtjeva internet konekciju)
 * **Sigurnost:** Aplikacija radi potpuno offline, ne prikuplja nikakve podatke pa čak ni analitike bilo o vama, vašem telefonu ili o uplatama koje u nju unesete. Ne komunicira sa vanjskim serverom. Sva pohrana podata se odvija na samom uređaju i nikada ga ne napušta. Aplikacija **mora** imati pristup internetu samo kada morate/želite ažurirati proviziju koja se obračunava.
 
 ## Informacije o aplikaciji i kodu
@@ -48,8 +49,9 @@ Trenutna verzija: **v1.3**
 * **Report Export:** At the end of the day, generate a PDF and/or TXT report (Payment Overview) with a single click. The files are automatically saved into organized, dated folders on the device and are ready for printing.
 * **Settings:** The app offers a few configuration options, including:
 1. Custom modification and entry of available services.
-2. Choosing the format for the generated Payment Overview.
-3. Automatic commission updates (Requires an internet connection).
+2. Send generated overview by email.
+3. Choosing the format for the generated Payment Overview.
+4. Automatic commission updates (Requires an internet connection).
 * **Security & Privacy:** The app works completely offline. It does not collect any data, not even analytics about you, your phone, or the payments you enter. It does not communicate with any external servers. All data storage takes place locally on the device and never leaves it. The app only **requires** internet access when you need/want to update the calculated commission rates.
 
 ## App and Code Information
