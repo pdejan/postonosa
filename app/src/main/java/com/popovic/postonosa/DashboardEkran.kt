@@ -15,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -128,7 +129,7 @@ fun DashboardEkran(navController: NavController, dao: RacunDao) {
                             },
                             colors = ButtonDefaults.buttonColors(containerColor = SporednaBoja)
                         ) {
-                            Text("NOVA STRANKA", color = GlavnaBoja)
+                            Text("NOVA STRANKA", fontSize = 14.sp, maxLines = 1, overflow = TextOverflow.Ellipsis, color = GlavnaBoja)
                         }
                     }
                     // LISTA RACUNA TRENUTNE STRANKE
