@@ -6,6 +6,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -22,6 +23,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
@@ -39,7 +41,6 @@ const val PROVIZIJA_URL = "https://raw.githubusercontent.com/pdejan/dejan.ba/ref
 
 @Composable
 fun PodesavanjaEkran(navController: NavController, prefs: SharedPreferences, dao: RacunDao) {
-    val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
     var uslugeList by remember { mutableStateOf(ucitajUsluge(prefs)) }
     var prikaziDialogZaNovuUslugu by remember { mutableStateOf(false) }
@@ -50,6 +51,8 @@ fun PodesavanjaEkran(navController: NavController, prefs: SharedPreferences, dao
     var ucitavanje by remember { mutableStateOf(false) }
     var exportPdf by remember { mutableStateOf(prefs.getBoolean("export_pdf", true)) }
     var exportTxt by remember { mutableStateOf(prefs.getBoolean("export_txt", true)) }
+    val context = LocalContext.current
+    var emailZaSlanje by remember { mutableStateOf(prefs.getString("email_za_slanje", "") ?: "") }
 
     Column(
         modifier = Modifier
@@ -92,6 +95,56 @@ fun PodesavanjaEkran(navController: NavController, prefs: SharedPreferences, dao
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Text("ODJAVI SE", color = Color.White, fontWeight = FontWeight.Bold)
+                }
+            }
+        }
+        Card(
+            modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp),
+            colors = CardDefaults.cardColors(containerColor = Color.White),
+            elevation = CardDefaults.cardElevation(4.dp)
+        ) {
+            Column(modifier = Modifier.padding(16.dp).fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
+                Text("Pošalji pregled uplata", fontSize = 16.sp, fontWeight = FontWeight.Bold, modifier = Modifier.padding(bottom = 8.dp))
+                Text("Unesi email adresu pošte na koju šalješ pregled uplata.", fontSize = 14.sp, color = Color.Gray, modifier = Modifier.padding(bottom = 16.dp))
+                // Polje za unos emaila
+                OutlinedTextField(
+                    value = emailZaSlanje,
+                    onValueChange = { noviUnos ->
+                        // Uklanjamo razmake jer email adresa ne smije imati razmak
+                        val bezRazmaka = noviUnos.replace(" ", "")
+                        emailZaSlanje = bezRazmaka
+                        // Automatski spašavamo email dok korisnik kuca
+                        prefs.edit().putString("email_za_slanje", emailZaSlanje).apply()
+                    },
+                    label = { Text("Email adresa pošte", color = Color.Gray) },
+                    singleLine = true,
+                    // Otvara tastaturu prilagođenu za kucanje emaila (ima znak @)
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
+                    colors = OutlinedTextFieldDefaults.colors(
+                        focusedBorderColor = GlavnaBoja,
+                        focusedLabelColor = GlavnaBoja,
+                        cursorColor = SporednaBoja
+                    ),
+                    modifier = Modifier.fillMaxWidth()
+                )
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                // Dugme za otvaranje Gmail-a
+                Button(
+                    onClick = {
+                        EmailAlati.posaljiZadnjiIzvjestaj(context)
+                    },
+                    modifier = Modifier.fillMaxWidth(),
+                    colors = ButtonDefaults.buttonColors(containerColor = GlavnaBoja)
+                ) {
+                    Text(
+                        text = "POŠALJI ZADNJI PREGLED",
+                        color = SporednaBoja,
+                        fontWeight = FontWeight.Bold,
+                        overflow = TextOverflow.Ellipsis,
+                        maxLines = 1
+                    )
                 }
             }
         }
@@ -241,8 +294,8 @@ fun PodesavanjaEkran(navController: NavController, prefs: SharedPreferences, dao
             elevation = CardDefaults.cardElevation(4.dp)
         ) {
             Column(modifier = Modifier.padding(16.dp), horizontalAlignment = Alignment.CenterHorizontally) {
-                Text("Format pregleda", fontSize = 16.sp, fontWeight = FontWeight.Bold, modifier = Modifier.padding(bottom = 8.dp))
-                Text("Izaberi format (ili oba) pregleda koji želiš snimiti prilikom kraja rada.", fontSize = 14.sp, color = Color.Gray, modifier = Modifier.padding(bottom = 12.dp))
+                Text("Format pregleda uplata", fontSize = 16.sp, fontWeight = FontWeight.Bold, modifier = Modifier.padding(bottom = 8.dp))
+                Text("Izaberi format (ili oba) pregleda uplata koji želiš snimiti prilikom kraja rada.", fontSize = 14.sp, color = Color.Gray, modifier = Modifier.padding(bottom = 12.dp))
                 // PDF
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
@@ -349,7 +402,7 @@ fun PodesavanjaEkran(navController: NavController, prefs: SharedPreferences, dao
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text = "POŠTONOŠA v1.3.1",
+                text = "POŠTONOŠA v1.4",
                 fontSize = 14.sp,
                 fontWeight = FontWeight.Bold,
                 color = Color.Gray

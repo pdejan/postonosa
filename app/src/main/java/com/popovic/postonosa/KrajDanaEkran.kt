@@ -79,6 +79,8 @@ fun KrajDanaEkran(navController: NavController, dao: RacunDao, prefs: SharedPref
             // eksport
             val trebaPdf = prefs.getBoolean("export_pdf", true)
             val trebaTxt = prefs.getBoolean("export_txt", true)
+            //Ocisti stare prefs ya email prije snimanja novih
+            prefs.edit().remove("zadnji_pdf_uri").remove("zadnji_txt_uri").apply()
             if (trebaPdf) {
                 PdfEksport.generisiPdf(context, imeFoldera, racuni, listaApoena, fizickiNovac)
             }
@@ -178,7 +180,7 @@ fun KrajDanaEkran(navController: NavController, dao: RacunDao, prefs: SharedPref
                     modifier = Modifier.fillMaxWidth().height(60.dp),
                     colors = ButtonDefaults.buttonColors(containerColor = GlavnaBoja)
                 ) {
-                    Text("ZAVRŠI RAD I FORMIRAJ PREGLED", fontSize = 18.sp, color = SporednaBoja, fontWeight = FontWeight.Bold, overflow = TextOverflow.Ellipsis, maxLines = 1)
+                    Text("ZAVRŠI RAD I SNIMI PREGLED", fontSize = 18.sp, color = SporednaBoja, fontWeight = FontWeight.Bold, overflow = TextOverflow.Ellipsis, maxLines = 1)
                 }
                 Spacer(modifier = Modifier.height(24.dp))
             }

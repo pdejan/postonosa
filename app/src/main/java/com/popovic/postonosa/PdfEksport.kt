@@ -147,6 +147,10 @@ object PdfEksport {
                 if (outputStream != null) {
                     pdfDocument.writeTo(outputStream)
                     outputStream.close()
+                    context.getSharedPreferences("PostonosaPrefs", Context.MODE_PRIVATE)
+                        .edit()
+                        .putString("zadnji_pdf_uri", uri.toString())
+                        .apply()
                 }
             }
         } catch (e: Exception) {

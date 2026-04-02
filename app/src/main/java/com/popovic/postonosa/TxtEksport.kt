@@ -81,6 +81,10 @@ object TxtEksport {
                 if (outputStream != null) {
                     outputStream.write(sb.toString().toByteArray())
                     outputStream.close()
+                    context.getSharedPreferences("PostonosaPrefs", Context.MODE_PRIVATE)
+                        .edit()
+                        .putString("zadnji_txt_uri", uri.toString())
+                        .apply()
                 }
             }
         } catch (e: Exception) {
