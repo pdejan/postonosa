@@ -2,6 +2,7 @@ package com.popovic.postonosa
 
 import android.content.ContentValues
 import android.content.Context
+import android.graphics.Canvas // Dodan import za Canvas
 import android.graphics.Paint
 import android.graphics.Typeface
 import android.graphics.pdf.PdfDocument
@@ -21,38 +22,37 @@ object PdfEksport {
         var page = pdfDocument.startPage(pageInfo)
         var canvas = page.canvas
         val paint = Paint()
-
         val prefs = context.getSharedPreferences("PostonosaPrefs", Context.MODE_PRIVATE)
         val radnikIme = prefs.getString("ime_prezime", "Nepoznat") ?: "Nepoznat"
         val radnikId = prefs.getString("radnik_id", "000") ?: "000"
         val posta = prefs.getString("posta_naziv", "Pošta") ?: "Pošta"
         val datum = SimpleDateFormat("dd.MM.yyyy  |  HH:mm", Locale.getDefault()).format(Date())
 
-        fun nacrtajZaglavljeTabele(pocetnaY: Float): Float {
+        fun nacrtajZaglavljeTabele(trenutniCanvas: Canvas, pocetnaY: Float): Float {
             paint.textAlign = Paint.Align.LEFT
             paint.typeface = Typeface.create(Typeface.DEFAULT, Typeface.BOLD)
-
-            canvas.drawText("R.br.", 40f, pocetnaY, paint)
-            canvas.drawText("Vrsta usluge", 80f, pocetnaY, paint)
-            canvas.drawText("Iznos", 240f, pocetnaY, paint)
-            canvas.drawText("Poštarina", 310f, pocetnaY, paint)
-            canvas.drawText("Ukupno", 380f, pocetnaY, paint)
-            canvas.drawText("Br.transakcije", 460f, pocetnaY, paint)
+            paint.textSize = 10f
+            trenutniCanvas.drawText("R.br.", 40f, pocetnaY, paint)
+            trenutniCanvas.drawText("Vrsta usluge", 80f, pocetnaY, paint)
+            trenutniCanvas.drawText("Iznos", 240f, pocetnaY, paint)
+            trenutniCanvas.drawText("Poštarina", 310f, pocetnaY, paint)
+            trenutniCanvas.drawText("Ukupno", 380f, pocetnaY, paint)
+            trenutniCanvas.drawText("Br.transakcije", 460f, pocetnaY, paint)
 
             paint.typeface = Typeface.create(Typeface.DEFAULT, Typeface.NORMAL)
-            return pocetnaY + 25f
+            return pocetnaY + 15f
         }
-
         // ZAGLAVLJE DOKUMENTA
         paint.textAlign = Paint.Align.LEFT
         paint.typeface = Typeface.create(Typeface.DEFAULT, Typeface.BOLD)
-        paint.textSize = 16f
-        canvas.drawText("PREGLED IZVRŠENIH UPLATA NA DOSTAVNOM REJONU", 40f, 50f, paint)
-        paint.typeface = Typeface.create(Typeface.DEFAULT, Typeface.NORMAL)
         paint.textSize = 14f
-        canvas.drawText("JPM: $posta  |  $radnikId $radnikIme |  $datum", 40f, 70f, paint)
-        canvas.drawLine(40f, 85f, 555f, 85f, paint)
-        var yPos = nacrtajZaglavljeTabele(115f)
+        canvas.drawText("PREGLED IZVRŠENIH UPLATA NA DOSTAVNOM REJONU", 40f, 30f, paint)
+        paint.typeface = Typeface.create(Typeface.DEFAULT, Typeface.NORMAL)
+        paint.textSize = 12f
+        canvas.drawText("JPM: $posta  |  $radnikId $radnikIme |  $datum", 40f, 50f, paint)
+        canvas.drawLine(40f, 65f, 555f, 65f, paint)
+        paint.textSize = 10f
+        var yPos = nacrtajZaglavljeTabele(canvas, 80f)
         var ukupnoIznosSvi = 0.0
         var ukupnoProvizijaSvi = 0.0
         val hronoloskiRacuni = racuni.reversed()
@@ -63,68 +63,75 @@ object PdfEksport {
                 pageInfo = PdfDocument.PageInfo.Builder(595, 842, stranicaBroj).create()
                 page = pdfDocument.startPage(pageInfo)
                 canvas = page.canvas
-                yPos = 50f
-                yPos = nacrtajZaglavljeTabele(yPos)
+                yPos = 30f
+                yPos = nacrtajZaglavljeTabele(canvas, yPos)
             }
             canvas.drawText("${index + 1}.", 40f, yPos, paint)
             canvas.drawText(racun.tipUsluge, 80f, yPos, paint)
             canvas.drawText(String.format("%.2f", racun.iznos), 240f, yPos, paint)
             canvas.drawText(String.format("%.2f", racun.provizija), 310f, yPos, paint)
             canvas.drawText(String.format("%.2f", racun.iznos + racun.provizija), 380f, yPos, paint)
-            yPos += 20f
+            yPos += 14f
             ukupnoIznosSvi += racun.iznos
             ukupnoProvizijaSvi += racun.provizija
         }
+        // ZAVRŠETAK TABELE
         canvas.drawLine(40f, yPos, 555f, yPos, paint)
-        yPos += 40f
-        if (yPos > 600f) {
+        yPos += 15f
+        if (yPos > 680f) {
             pdfDocument.finishPage(page)
             stranicaBroj++
             pageInfo = PdfDocument.PageInfo.Builder(595, 842, stranicaBroj).create()
             page = pdfDocument.startPage(pageInfo)
             canvas = page.canvas
-            yPos = 50f
+            yPos = 30f
         }
         // REKAPITULACIJA
+        paint.textSize = 11f
         paint.typeface = Typeface.create(Typeface.DEFAULT, Typeface.BOLD)
         canvas.drawText("REKAPITULACIJA:", 40f, yPos, paint)
-        yPos += 25f
+        yPos += 16f
         paint.typeface = Typeface.create(Typeface.DEFAULT, Typeface.NORMAL)
         canvas.drawText("Ukupno transakcija: ${hronoloskiRacuni.size}", 40f, yPos, paint)
-        yPos += 20f
+        yPos += 16f
         canvas.drawText("Ukupno naplaćeni računi: ${String.format("%.2f", ukupnoIznosSvi)} KM", 40f, yPos, paint)
-        yPos += 20f
+        yPos += 16f
         canvas.drawText("Ukupno naplaćena provizija: ${String.format("%.2f", ukupnoProvizijaSvi)} KM", 40f, yPos, paint)
-        yPos += 40f
+        yPos += 16f
+        paint.typeface = Typeface.create(Typeface.DEFAULT, Typeface.BOLD)
+        val sveUkupno = ukupnoIznosSvi + ukupnoProvizijaSvi
+        canvas.drawText("UKUPNO: ${String.format("%.2f", sveUkupno)} KM", 40f, yPos, paint)
+        yPos += 30f
         // APOENSKA STRUKTURA
         val sredinaStranice = 595f / 2f
         paint.textAlign = Paint.Align.CENTER
         paint.typeface = Typeface.create(Typeface.DEFAULT, Typeface.BOLD)
         canvas.drawText("APOENSKA STRUKTURA:", sredinaStranice, yPos, paint)
-        yPos += 25f
+        yPos += 20f
         paint.typeface = Typeface.create(Typeface.DEFAULT, Typeface.NORMAL)
         if (apoeni.isEmpty()) {
             canvas.drawText("Nema unešenih apoena.", sredinaStranice, yPos, paint)
-            yPos += 20f
+            yPos += 16f
         } else {
             apoeni.forEach { linija ->
                 canvas.drawText(linija, sredinaStranice, yPos, paint)
-                yPos += 20f
+                yPos += 16f
             }
         }
-        yPos += 10f
+        yPos += 5f
         paint.typeface = Typeface.create(Typeface.DEFAULT, Typeface.BOLD)
         canvas.drawText("UKUPAN IZNOS: ${String.format("%.2f", ukupnoFizicki)} KM", sredinaStranice, yPos, paint)
-        yPos += 80f
+        yPos += 50f
         // POTPIS NA DNU
         paint.textAlign = Paint.Align.LEFT
         paint.typeface = Typeface.create(Typeface.DEFAULT, Typeface.NORMAL)
         canvas.drawLine(40f, yPos, 240f, yPos, paint)
-        canvas.drawText("Predao:", 40f, yPos + 20f, paint)
+        canvas.drawText("Predao:", 40f, yPos + 16f, paint)
         canvas.drawLine(350f, yPos, 555f, yPos, paint)
-        canvas.drawText("Primio:", 350f, yPos + 20f, paint)
+        canvas.drawText("Primio:", 350f, yPos + 16f, paint)
 
         pdfDocument.finishPage(page)
+
         try {
             val datumVrijemeFajl = SimpleDateFormat("dd_MM_yyyy_HH_mm", Locale.getDefault()).format(Date())
             val sigurnoIme = radnikIme.replace(" ", "_")

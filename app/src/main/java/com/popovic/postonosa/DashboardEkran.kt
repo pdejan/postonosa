@@ -150,12 +150,12 @@ fun DashboardEkran(navController: NavController, dao: RacunDao) {
                     }
                 }
             }
-            TextButton(
-                onClick = { navController.navigate("lista") },
-                modifier = Modifier.padding(top = 16.dp)
-            ) {
-                Text("PREGLED UPLATA", color = SporednaBoja, fontWeight = FontWeight.Bold)
-            }
+             //TextButton(
+             //    onClick = { navController.navigate("lista") },
+             //     modifier = Modifier.padding(top = 16.dp)
+            // ) {
+           //    Text("PREGLED UPLATA", color = SporednaBoja, fontWeight = FontWeight.Bold)
+           //  }
         }
         // DNO (fiksno)
         Column(
@@ -163,6 +163,7 @@ fun DashboardEkran(navController: NavController, dao: RacunDao) {
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp)
                 .padding(bottom = 16.dp)
+                .padding(top = 16.dp)
         ) {
             Button(
                 onClick = { navController.navigate("unos") },

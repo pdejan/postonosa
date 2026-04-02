@@ -22,6 +22,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -110,7 +111,7 @@ fun PodesavanjaEkran(navController: NavController, prefs: SharedPreferences, dao
                 ) {
                     Icon(imageVector = androidx.compose.material.icons.Icons.Default.Add, contentDescription = "Dodaj", tint = SporednaBoja)
                     Spacer(modifier = Modifier.width(8.dp))
-                    Text("DODAJ NOVU USLUGU", color = SporednaBoja, fontWeight = FontWeight.Bold)
+                    Text("DODAJ NOVU USLUGU", color = SporednaBoja, fontWeight = FontWeight.Bold, overflow = TextOverflow.Ellipsis, maxLines = 1)
                 }
                 Column(modifier = Modifier.fillMaxWidth()) {
                     uslugeList.forEachIndexed { index, usluga ->
@@ -128,7 +129,9 @@ fun PodesavanjaEkran(navController: NavController, prefs: SharedPreferences, dao
                                 color = Color.Black,
                                 fontSize = 16.sp,
                                 fontWeight = FontWeight.Medium,
-                                modifier = Modifier.weight(1f)
+                                modifier = Modifier.weight(1f),
+                                overflow = TextOverflow.Ellipsis,
+                                maxLines = 1
                             )
                             // Kontrole
                             Row(verticalAlignment = Alignment.CenterVertically) {
@@ -334,7 +337,7 @@ fun PodesavanjaEkran(navController: NavController, prefs: SharedPreferences, dao
                     modifier = Modifier.fillMaxWidth(),
                     enabled = !ucitavanje
                 ) {
-                    Text(if (ucitavanje) "PREUZIMANJE..." else "AŽURIRAJ PROVIZIJU", color = SporednaBoja, fontWeight = FontWeight.Bold)
+                    Text(if (ucitavanje) "PREUZIMANJE..." else "AŽURIRAJ PROVIZIJU", color = SporednaBoja, fontWeight = FontWeight.Bold, overflow = TextOverflow.Ellipsis, maxLines = 1)
                 }
             }
         }
@@ -346,7 +349,7 @@ fun PodesavanjaEkran(navController: NavController, prefs: SharedPreferences, dao
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text = "POŠTONOŠA v1.3",
+                text = "POŠTONOŠA v1.3.1",
                 fontSize = 14.sp,
                 fontWeight = FontWeight.Bold,
                 color = Color.Gray

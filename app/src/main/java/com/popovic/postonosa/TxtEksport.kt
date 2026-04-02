@@ -23,37 +23,35 @@ object TxtEksport {
         // ZAGLAVLJE
         sb.append("PREGLED IZVRSENIH UPLATA NA DOSTAVNOM REJONU\n")
         sb.append("JPM: $posta | $radnikId $radnikIme | $datum\n")
-        sb.append("-----------------------------------------------------------------\n")
-        // KOLONE (65 karaktera širine)
-        sb.append(String.format("%-5s %-14s %-8s %-9s %-8s %-15s\n", "R.br.", "Vrsta uplate", "Iznos", "Postarina", "Ukupno", "Br.transakcije"))
-        sb.append("-----------------------------------------------------------------\n")
+        sb.append("--------------------------------------------------------------------------------\n")
+        // R.br(5) + Vrsta(25) + Iznos(10) + Postarina(10) + Ukupno(11) + Transakcija(14) + 5 razmaka = 80 karaktera
+        sb.append(String.format("%-5s %-25s %-10s %-10s %-11s %-14s\n", "R.br.", "Vrsta uplate", "Iznos", "Postarina", "Ukupno", "Br.transakcije"))
+        sb.append("--------------------------------------------------------------------------------\n")
         var ukupnoIznosSvi = 0.0
         var ukupnoProvizijaSvi = 0.0
         val hronoloskiRacuni = racuni.reversed()
         // REDOVI SA RACUNIMA
         hronoloskiRacuni.forEachIndexed { index, racun ->
-            val br = "${index + 1}."
-            val usluga = if (racun.tipUsluge.length > 19) racun.tipUsluge.take(17) + ".." else racun.tipUsluge
-            val iznos = String.format("%.2f", racun.iznos)
-            val provizija = String.format("%.2f", racun.provizija)
-            val ukupno = String.format("%.2f", racun.iznos + racun.provizija)
-            sb.append(String.format("%-5s %-15s %-8.2f %-9.2f %-8.2f %-14s\n",
+            val usluga = if (racun.tipUsluge.length > 24) racun.tipUsluge.take(22) + ".." else racun.tipUsluge
+            sb.append(String.format("%-5s %-25s %-10.2f %-10.2f %-11.2f %-14s\n",
                 "${index + 1}.",
-                racun.tipUsluge.take(15),
+                usluga,
                 racun.iznos,
                 racun.provizija,
                 (racun.iznos + racun.provizija),
-                "______________"
+                ""
             ))
             ukupnoIznosSvi += racun.iznos
             ukupnoProvizijaSvi += racun.provizija
         }
         // REKAPITULACIJA
-        sb.append("-----------------------------------------------------------------\n")
+        sb.append("--------------------------------------------------------------------------------\n")
         sb.append("REKAPITULACIJA:\n")
         sb.append("Ukupno transakcija: ${hronoloskiRacuni.size}\n")
         sb.append("Ukupno naplaceni racuni: ${String.format("%.2f", ukupnoIznosSvi)} KM\n")
-        sb.append("Ukupno naplacena provizija: ${String.format("%.2f", ukupnoProvizijaSvi)} KM\n\n")
+        sb.append("Ukupno naplacena provizija: ${String.format("%.2f", ukupnoProvizijaSvi)} KM\n")
+        val sveUkupno = ukupnoIznosSvi + ukupnoProvizijaSvi
+        sb.append("UKUPNO: ${String.format("%.2f", sveUkupno)} KM\n\n")
         // APOENI
         sb.append("APOENSKA STRUKTURA:\n")
         if (apoeni.isEmpty()) {
@@ -66,7 +64,7 @@ object TxtEksport {
         sb.append("\nUKUPAN IZNOS: ${String.format("%.2f", ukupnoFizicki)} KM\n")
         // POTPISI
         sb.append("\n\n\n\n")
-        sb.append("Predao: ____________________     Primio: ____________________\n")
+        sb.append("Predao: ____________________          Primio: ____________________\n")
         // SNIMANJE
         try {
             val datumVrijemeFajl = SimpleDateFormat("dd_MM_yyyy_HH_mm", Locale.getDefault()).format(Date())

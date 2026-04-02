@@ -13,6 +13,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -60,7 +61,9 @@ fun ListaEkran(navController: NavController, dao: RacunDao) {
                                     text = "$redniBroj. - ${racun.tipUsluge}",
                                     fontWeight = FontWeight.Bold,
                                     fontSize = 18.sp,
-                                    color = SporednaBoja
+                                    color = SporednaBoja,
+                                    overflow = TextOverflow.Ellipsis,
+                                    maxLines = 1
                                 )
                                 Text("Iznos: ${String.format("%.2f", racun.iznos)} KM", color = Color.Gray, fontSize = 14.sp)
                                 Text("Provizija: ${String.format("%.2f", racun.provizija)} KM", color = Color.Gray, fontSize = 14.sp)

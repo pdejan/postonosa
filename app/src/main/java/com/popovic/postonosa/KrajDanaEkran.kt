@@ -22,6 +22,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import android.widget.Toast
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.ui.text.style.TextOverflow
 
 @Composable
 fun KrajDanaEkran(navController: NavController, dao: RacunDao, prefs: SharedPreferences) {
@@ -177,7 +178,7 @@ fun KrajDanaEkran(navController: NavController, dao: RacunDao, prefs: SharedPref
                     modifier = Modifier.fillMaxWidth().height(60.dp),
                     colors = ButtonDefaults.buttonColors(containerColor = GlavnaBoja)
                 ) {
-                    Text("ZAVRŠI RAD I FORMIRAJ PREGLED", fontSize = 18.sp, color = SporednaBoja, fontWeight = FontWeight.Bold)
+                    Text("ZAVRŠI RAD I FORMIRAJ PREGLED", fontSize = 18.sp, color = SporednaBoja, fontWeight = FontWeight.Bold, overflow = TextOverflow.Ellipsis, maxLines = 1)
                 }
                 Spacer(modifier = Modifier.height(24.dp))
             }
