@@ -21,7 +21,7 @@
 * **Resursi trećih lica:** Ikona aplikacije je preuzeta sa **FlatIcon**. Ja posjedujem licencu za ovu primjenu (aplikacija), ali ukoliko kompajlate kod za neku drugu upotrebu obavezno je navođenje autora kako slijedi: Email icons created by [Freepik - Flaticon](https://www.flaticon.com/free-icons/email).  
 
 ## Verzija
-Trenutna verzija: **v1.3**
+Trenutna verzija: **v1.4**
 
 <h2 align="center">Screenshots</h2>
 
@@ -60,4 +60,4 @@ Trenutna verzija: **v1.3**
 * **Third-party assets:** The application icon was sourced from **Flaticon**. I hold a valid license for its use in this specific application. However, if you recompile the code for any other purpose, attribution is required as follows: Email icons created by [Freepik - Flaticon](https://www.flaticon.com/free-icons/email).
 
 ## Version
-Current version: **v1.3**
+Current version: **v1.4**
