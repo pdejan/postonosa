@@ -20,9 +20,6 @@
 * **Boje:** Tema aplikacije je urađena u dvije akcentne boje, GlavnaBoja (u ovom slučaju žuta) i SporednaBoja (crna). Ukoliko se mjenja akcentni izgled aplikacije dovoljno je promjeniti ove dvije varijable u Boje.kt
 * **Resursi trećih lica:** Ikona aplikacije je preuzeta sa **FlatIcon**. Ja posjedujem licencu za ovu primjenu (aplikacija), ali ukoliko kompajlate kod za neku drugu upotrebu obavezno je navođenje autora kako slijedi: Email icons created by [Freepik - Flaticon](https://www.flaticon.com/free-icons/email).  
 
-## Verzija
-Trenutna verzija: **v1.4**
-
 <h2 align="center">Screenshots</h2>
 
 <p align="center">
@@ -58,6 +55,3 @@ Trenutna verzija: **v1.4**
 * **Automatic Commission Update:** To calculate commissions and rates, the app references the **naknada.json** file located in the assets folder. To enable seamless commission updates via a single button click in the settings without requiring a full app update this JSON file must be hosted online. This allows the app to fetch and save the latest commission data as needed. The variable in PodesavanjaEkran.kt must contain the exact path to this online file.
 * **Colors:** The app's theme is built around two accent colors: GlavnaBoja (Main Color, yellow in this case) and SporednaBoja (Secondary Color, black). If you want to change the app's visual identity, you simply need to modify these two variables in Boje.kt.
 * **Third-party assets:** The application icon was sourced from **Flaticon**. I hold a valid license for its use in this specific application. However, if you recompile the code for any other purpose, attribution is required as follows: Email icons created by [Freepik - Flaticon](https://www.flaticon.com/free-icons/email).
-
-## Version
-Current version: **v1.4**
