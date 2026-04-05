@@ -22,18 +22,20 @@ object TxtEksport {
         val sb = java.lang.StringBuilder()
         // ZAGLAVLJE
         sb.append("PREGLED IZVRSENIH UPLATA NA DOSTAVNOM REJONU\n")
-        sb.append("JPM: $posta | $radnikId $radnikIme | $datum\n")
-        sb.append("--------------------------------------------------------------------------------\n")
-        // R.br(5) + Vrsta(25) + Iznos(10) + Postarina(10) + Ukupno(11) + Transakcija(14) + 5 razmaka = 80 karaktera
-        sb.append(String.format("%-5s %-25s %-10s %-10s %-11s %-14s\n", "R.br.", "Vrsta uplate", "Iznos", "Postarina", "Ukupno", "Br.transakcije"))
-        sb.append("--------------------------------------------------------------------------------\n")
+        sb.append("JPM: $posta | $radnikId $radnikIme\n")
+        sb.append("Datum: $datum\n")
+        // 65 karaktera
+        sb.append("-----------------------------------------------------------------\n")
+        // R.br(5) + Vrsta(20) + Iznos(9) + Postarina(9) + Ukupno(9) + Br.tran.(9) + 4 razmaka = 65 karaktera
+        sb.append(String.format("%-5s %-20s %-9s %-9s %-9s %-9s\n", "R.br.", "Vrsta uplate", "Iznos", "Postarina", "Ukupno", "Br.tran."))
+        sb.append("-----------------------------------------------------------------\n")
         var ukupnoIznosSvi = 0.0
         var ukupnoProvizijaSvi = 0.0
         val hronoloskiRacuni = racuni.reversed()
         // REDOVI SA RACUNIMA
         hronoloskiRacuni.forEachIndexed { index, racun ->
-            val usluga = if (racun.tipUsluge.length > 24) racun.tipUsluge.take(22) + ".." else racun.tipUsluge
-            sb.append(String.format("%-5s %-25s %-10.2f %-10.2f %-11.2f %-14s\n",
+            val usluga = if (racun.tipUsluge.length > 20) racun.tipUsluge.take(18) + ".." else racun.tipUsluge
+            sb.append(String.format("%-5s %-20s %-9.2f %-9.2f %-9.2f %-9s\n",
                 "${index + 1}.",
                 usluga,
                 racun.iznos,
@@ -45,7 +47,7 @@ object TxtEksport {
             ukupnoProvizijaSvi += racun.provizija
         }
         // REKAPITULACIJA
-        sb.append("--------------------------------------------------------------------------------\n")
+        sb.append("-----------------------------------------------------------------\n")
         sb.append("REKAPITULACIJA:\n")
         sb.append("Ukupno transakcija: ${hronoloskiRacuni.size}\n")
         sb.append("Ukupno naplaceni racuni: ${String.format("%.2f", ukupnoIznosSvi)} KM\n")
@@ -64,7 +66,7 @@ object TxtEksport {
         sb.append("\nUKUPAN IZNOS: ${String.format("%.2f", ukupnoFizicki)} KM\n")
         // POTPISI
         sb.append("\n\n\n\n")
-        sb.append("Predao: ____________________          Primio: ____________________\n")
+        sb.append("Predao: ____________________     Primio: ____________________\n")
         // SNIMANJE
         try {
             val datumVrijemeFajl = SimpleDateFormat("dd_MM_yyyy_HH_mm", Locale.getDefault()).format(Date())
