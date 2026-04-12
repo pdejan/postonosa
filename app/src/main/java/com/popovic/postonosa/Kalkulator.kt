@@ -55,14 +55,4 @@ object Kalkulator {
             }
         }
     }
-    fun dohvatiUsluge(context: Context): List<String> {
-        return try {
-            val jsonString = procitajJson(context)
-            val json = JSONObject(jsonString)
-            val niz = json.getJSONArray("usluge")
-            List(niz.length()) { niz.getString(it) }
-        } catch (e: Exception) {
-            listOf("Platni promet")
-        }
-    }
 }

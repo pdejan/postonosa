@@ -22,7 +22,7 @@ import androidx.navigation.NavController
 
 @Composable
 fun DashboardEkran(navController: NavController, dao: RacunDao) {
-    // Stoperica / okidac
+    // Stoperica
     val trigger = Sesija.osvjeziBazu.value
     val pocetak = Sesija.pocetakKorisnika.value
 
@@ -78,7 +78,7 @@ fun DashboardEkran(navController: NavController, dao: RacunDao) {
                 }
                 IconButton(onClick = { navController.navigate("podesavanja") }) {
                     Icon(
-                        imageVector = androidx.compose.material.icons.Icons.Default.Settings,
+                        imageVector = Icons.Default.Settings,
                         contentDescription = "Podešavanja",
                         modifier = Modifier.size(32.dp),
                         tint = Color.Gray
@@ -150,12 +150,6 @@ fun DashboardEkran(navController: NavController, dao: RacunDao) {
                     }
                 }
             }
-             //TextButton(
-             //    onClick = { navController.navigate("lista") },
-             //     modifier = Modifier.padding(top = 16.dp)
-            // ) {
-           //    Text("PREGLED UPLATA", color = SporednaBoja, fontWeight = FontWeight.Bold)
-           //  }
         }
         // DNO (fiksno)
         Column(
