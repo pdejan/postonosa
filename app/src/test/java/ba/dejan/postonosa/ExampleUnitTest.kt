@@ -1,4 +1,4 @@
-package com.popovic.postonosa
+package ba.dejan.postonosa
 
 import org.junit.Test
 

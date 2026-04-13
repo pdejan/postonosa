@@ -3,17 +3,15 @@ plugins {
     alias(libs.plugins.kotlin.compose)
     id("com.google.devtools.ksp")
 }
-
 android {
-    namespace = "com.popovic.postonosa"
+    namespace = "ba.dejan.postonosa"
     compileSdk {
         version = release(36) {
             minorApiLevel = 1
         }
     }
-
     defaultConfig {
-        applicationId = "com.popovic.postonosa"
+        applicationId = "ba.dejan.postonosa"
         minSdk = 26
         targetSdk = 36
         versionCode = 5
@@ -24,7 +22,6 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
-
     buildTypes {
         release {
             isMinifyEnabled = false
@@ -32,6 +29,7 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            signingConfig = signingConfigs.getByName("debug")
         }
     }
     compileOptions {
@@ -42,7 +40,6 @@ android {
         compose = true
     }
 }
-
 dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
@@ -66,6 +63,6 @@ dependencies {
     implementation("androidx.room:room-runtime:$room_version")
     implementation("androidx.room:room-ktx:$room_version")
 
-    // KLJUČNA LINIJA: Koristi ksp umjesto kapt ili annotationProcessor
+    //Koristi ksp umjesto kapt ili annotationProcessor
     ksp("androidx.room:room-compiler:$room_version")
 }
