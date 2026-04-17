@@ -76,13 +76,15 @@ object PdfEksport {
         // ZAVRŠETAK TABELE
         canvas.drawLine(40f, yPos, 555f, yPos, paint)
         yPos += 15f
-        if (yPos > 680f) {
+        // Rekapitulacija (~90f) + Apoeni (svaki po 16f) + Potpis i razmaci (~80f)
+        val potrebanProstor = 170f + (apoeni.size * 16f)
+        if (yPos + potrebanProstor > 800f) {
             pdfDocument.finishPage(page)
             stranicaBroj++
             pageInfo = PdfDocument.PageInfo.Builder(595, 842, stranicaBroj).create()
             page = pdfDocument.startPage(pageInfo)
             canvas = page.canvas
-            yPos = 30f
+            yPos = 50f
         }
         // REKAPITULACIJA
         paint.textSize = 11f
@@ -112,11 +114,27 @@ object PdfEksport {
             yPos += 16f
         } else {
             apoeni.forEach { linija ->
+                if (yPos > 780f) {
+                    pdfDocument.finishPage(page)
+                    stranicaBroj++
+                    pageInfo = PdfDocument.PageInfo.Builder(595, 842, stranicaBroj).create()
+                    page = pdfDocument.startPage(pageInfo)
+                    canvas = page.canvas
+                    yPos = 50f
+                }
                 canvas.drawText(linija, sredinaStranice, yPos, paint)
                 yPos += 16f
             }
         }
         yPos += 5f
+        if (yPos > 750f) {
+            pdfDocument.finishPage(page)
+            stranicaBroj++
+            pageInfo = PdfDocument.PageInfo.Builder(595, 842, stranicaBroj).create()
+            page = pdfDocument.startPage(pageInfo)
+            canvas = page.canvas
+            yPos = 50f
+        }
         paint.typeface = Typeface.create(Typeface.DEFAULT, Typeface.NORMAL)
         canvas.drawText("UKUPAN IZNOS: ${String.format("%.2f", ukupnoFizicki)} KM", sredinaStranice, yPos, paint)
         yPos += 50f
