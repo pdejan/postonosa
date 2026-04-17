@@ -32,13 +32,13 @@ fun UnosEkran(navController: NavController, dao: RacunDao, prefs: SharedPreferen
     val usluge = remember { ucitajUsluge(prefs) }
     val focusRequester = remember { FocusRequester() }
     var iznosTekst by remember { mutableStateOf("") }
-    var izabranaUsluga by remember { mutableStateOf(usluge.firstOrNull() ?: "Platni promet") }
+    var izabranaUsluga by remember { mutableStateOf(usluge.firstOrNull() ?: TipUsluge("Platni promet", false)) }
     var expanded by remember { mutableStateOf(false) }
     val iznos = iznosTekst.toDoubleOrNull() ?: 0.0
-    val provizija = Kalkulator.izracunaj(context, iznos)
+    val provizija = if (izabranaUsluga.bezProvizije) 0.0 else Kalkulator.izracunaj(context, iznos)
     val snimiUplatu = {
         if (iznos > 0) {
-            val racun = Racun(tipUsluge = izabranaUsluga, iznos = iznos, provizija = provizija)
+            val racun = Racun(tipUsluge = izabranaUsluga.naziv, iznos = iznos, provizija = provizija)
             dao.dodajRacun(racun)
             Sesija.osvjeziBazu.value += 1
             iznosTekst = ""
@@ -60,7 +60,7 @@ fun UnosEkran(navController: NavController, dao: RacunDao, prefs: SharedPreferen
             onExpandedChange = { expanded = !expanded }
         ) {
             OutlinedTextField(
-                value = izabranaUsluga,
+                value = izabranaUsluga.naziv,
                 onValueChange = {},
                 readOnly = true,
                 label = { Text("Vrsta uplate") },
@@ -80,7 +80,13 @@ fun UnosEkran(navController: NavController, dao: RacunDao, prefs: SharedPreferen
             ) {
                 usluge.forEach { usluga ->
                     DropdownMenuItem(
-                        text = { Text(usluga, fontSize = 20.sp, color = SporednaBoja) },
+                        text = {
+                            Text(
+                                text = usluga.naziv,
+                                fontSize = 20.sp,
+                                color = SporednaBoja
+                            )
+                        },
                         onClick = {
                             izabranaUsluga = usluga
                             expanded = false

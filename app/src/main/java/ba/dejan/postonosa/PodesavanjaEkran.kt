@@ -42,6 +42,7 @@ fun PodesavanjaEkran(navController: NavController, prefs: SharedPreferences, dao
     var uslugeList by remember { mutableStateOf(ucitajUsluge(prefs)) }
     var prikaziDialogZaNovuUslugu by remember { mutableStateOf(false) }
     var tekstNoveUsluge by remember { mutableStateOf("") }
+    var bezProvizijeCheckbox by remember { mutableStateOf(false) }
     val ime = prefs.getString("ime_prezime", "Nepoznat") ?: "Nepoznat"
     val idRadnika = prefs.getString("radnik_id", "000") ?: "000"
     val posta = prefs.getString("posta_naziv", "Nepoznato") ?: "Nepoznato"
@@ -140,7 +141,7 @@ fun PodesavanjaEkran(navController: NavController, prefs: SharedPreferences, dao
                 }
             }
         }
-        //  USLUGE
+        // USLUGE
         Card(
             modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp),
             colors = CardDefaults.cardColors(containerColor = Color.White),
@@ -160,17 +161,17 @@ fun PodesavanjaEkran(navController: NavController, prefs: SharedPreferences, dao
                 }
                 Column(modifier = Modifier.fillMaxWidth()) {
                     uslugeList.forEachIndexed { index, usluga ->
+                        val bojaPozadine = if (usluga.bezProvizije) Color(0xFFC8E6C9) else Color(0xFFE0E0E0)
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(vertical = 4.dp)
-                                .background(Color(0xFFE0E0E0), shape = androidx.compose.foundation.shape.RoundedCornerShape(8.dp))
+                                .background(bojaPozadine, shape = androidx.compose.foundation.shape.RoundedCornerShape(8.dp))
                                 .padding(horizontal = 16.dp, vertical = 12.dp),
                             verticalAlignment = Alignment.CenterVertically
                         ) {
-                            // Naziv usluge
                             Text(
-                                text = usluga,
+                                text = usluga.naziv,
                                 color = Color.Black,
                                 fontSize = 16.sp,
                                 fontWeight = FontWeight.Medium,
@@ -180,43 +181,39 @@ fun PodesavanjaEkran(navController: NavController, prefs: SharedPreferences, dao
                             )
                             // Kontrole
                             Row(verticalAlignment = Alignment.CenterVertically) {
-                                // Dugme GORE (sakriveno na prvom)
+                                // Dugme GORE
                                 if (index > 0) {
                                     Icon(
                                         imageVector = androidx.compose.material.icons.Icons.Default.KeyboardArrowUp,
                                         contentDescription = "Gore",
                                         tint = Color.DarkGray,
-                                        modifier = Modifier
-                                            .size(28.dp)
-                                            .clickable {
-                                                val novaLista = uslugeList.toMutableList()
-                                                val temp = novaLista[index]
-                                                novaLista[index] = novaLista[index - 1]
-                                                novaLista[index - 1] = temp
-                                                uslugeList = novaLista
-                                                spasiUsluge(prefs, novaLista)
-                                            }
+                                        modifier = Modifier.size(28.dp).clickable {
+                                            val novaLista = uslugeList.toMutableList()
+                                            val temp = novaLista[index]
+                                            novaLista[index] = novaLista[index - 1]
+                                            novaLista[index - 1] = temp
+                                            uslugeList = novaLista
+                                            spasiUsluge(prefs, novaLista)
+                                        }
                                     )
                                 } else {
                                     Spacer(modifier = Modifier.size(28.dp))
                                 }
                                 Spacer(modifier = Modifier.width(4.dp))
-                                // Dugme DOLE (sakriveno na zadnjem)
+                                // Dugme DOLE
                                 if (index < uslugeList.size - 1) {
                                     Icon(
                                         imageVector = androidx.compose.material.icons.Icons.Default.KeyboardArrowDown,
                                         contentDescription = "Dole",
                                         tint = Color.DarkGray,
-                                        modifier = Modifier
-                                            .size(28.dp)
-                                            .clickable {
-                                                val novaLista = uslugeList.toMutableList()
-                                                val temp = novaLista[index]
-                                                novaLista[index] = novaLista[index + 1]
-                                                novaLista[index + 1] = temp
-                                                uslugeList = novaLista
-                                                spasiUsluge(prefs, novaLista)
-                                            }
+                                        modifier = Modifier.size(28.dp).clickable {
+                                            val novaLista = uslugeList.toMutableList()
+                                            val temp = novaLista[index]
+                                            novaLista[index] = novaLista[index + 1]
+                                            novaLista[index + 1] = temp
+                                            uslugeList = novaLista
+                                            spasiUsluge(prefs, novaLista)
+                                        }
                                     )
                                 } else {
                                     Spacer(modifier = Modifier.size(28.dp))
@@ -227,13 +224,11 @@ fun PodesavanjaEkran(navController: NavController, prefs: SharedPreferences, dao
                                     imageVector = androidx.compose.material.icons.Icons.Default.Delete,
                                     contentDescription = "Obriši",
                                     tint = Color.Red.copy(alpha = 0.8f),
-                                    modifier = Modifier
-                                        .size(24.dp)
-                                        .clickable {
-                                            val novaLista = uslugeList.filter { it != usluga }
-                                            uslugeList = novaLista
-                                            spasiUsluge(prefs, novaLista)
-                                        }
+                                    modifier = Modifier.size(24.dp).clickable {
+                                        val novaLista = uslugeList.filter { it.naziv != usluga.naziv }
+                                        uslugeList = novaLista
+                                        spasiUsluge(prefs, novaLista)
+                                    }
                                 )
                             }
                         }
@@ -248,23 +243,41 @@ fun PodesavanjaEkran(navController: NavController, prefs: SharedPreferences, dao
                 containerColor = Color.White,
                 title = { Text("NOVA USLUGA", fontSize = 20.sp, fontWeight = FontWeight.Bold) },
                 text = {
-                    OutlinedTextField(
-                        value = tekstNoveUsluge,
-                        onValueChange = { tekstNoveUsluge = it },
-                        label = { Text("Naziv usluge", color = Color.Gray) },
-                        singleLine = true,
-                        colors = OutlinedTextFieldDefaults.colors(focusedBorderColor = GlavnaBoja, focusedLabelColor = SporednaBoja)
-                    )
+                    Column {
+                        OutlinedTextField(
+                            value = tekstNoveUsluge,
+                            onValueChange = { tekstNoveUsluge = it },
+                            label = { Text("Naziv usluge", color = Color.Gray) },
+                            singleLine = true,
+                            colors = OutlinedTextFieldDefaults.colors(focusedBorderColor = GlavnaBoja, focusedLabelColor = SporednaBoja)
+                        )
+                        Spacer(modifier = Modifier.height(12.dp))
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clickable { bezProvizijeCheckbox = !bezProvizijeCheckbox }
+                                .padding(vertical = 4.dp)
+                        ) {
+                            Checkbox(
+                                checked = bezProvizijeCheckbox,
+                                onCheckedChange = { bezProvizijeCheckbox = it },
+                                colors = CheckboxDefaults.colors(checkedColor = GlavnaBoja, checkmarkColor = SporednaBoja)
+                            )
+                            Text("Bez provizije!", modifier = Modifier.padding(start = 4.dp))
+                        }
+                    }
                 },
                 confirmButton = {
                     Button(
                         onClick = {
-                            if (tekstNoveUsluge.isNotBlank() && !uslugeList.contains(tekstNoveUsluge)) {
-                                val novaLista = uslugeList + tekstNoveUsluge.trim()
+                            if (tekstNoveUsluge.isNotBlank() && !uslugeList.any { it.naziv == tekstNoveUsluge }) {
+                                val novaLista = uslugeList + TipUsluge(tekstNoveUsluge.trim(), bezProvizijeCheckbox)
                                 uslugeList = novaLista
                                 spasiUsluge(prefs, novaLista)
                             }
                             tekstNoveUsluge = ""
+                            bezProvizijeCheckbox = false
                             prikaziDialogZaNovuUslugu = false
                         },
                         colors = ButtonDefaults.buttonColors(containerColor = GlavnaBoja)
@@ -394,7 +407,7 @@ fun PodesavanjaEkran(navController: NavController, prefs: SharedPreferences, dao
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text = "POŠTONOŠA v1.4.3",
+                text = "POŠTONOŠA v1.5",
                 fontSize = 14.sp,
                 fontWeight = FontWeight.Bold,
                 color = Color.Gray
@@ -407,24 +420,43 @@ fun PodesavanjaEkran(navController: NavController, prefs: SharedPreferences, dao
         }
     }
 }
-// Cuvanje  liste usluga
-fun ucitajUsluge(prefs: SharedPreferences): List<String> {
+// Čuvanje liste usluga
+data class TipUsluge(val naziv: String, val bezProvizije: Boolean = false)
+fun ucitajUsluge(prefs: SharedPreferences): List<TipUsluge> {
     val spaseno = prefs.getString("lista_usluga", "PRVI_PUT")
     return when {
         spaseno == "PRVI_PUT" -> {
-            // Aplikacija se prvi put pokrece
-            listOf("Elektroprivreda", "Mtel", "Supernova", "Telemach", "Voda", "Smeće", "Platni promet")
+            // Aplikacija se prvi put pokreće
+            listOf(
+                TipUsluge("Elektroprivreda"),
+                TipUsluge("Mtel"),
+                TipUsluge("Supernova"),
+                TipUsluge("Telemach"),
+                TipUsluge("Voda"),
+                TipUsluge("Smeće"),
+                TipUsluge("RTRS", true),
+                TipUsluge("Platni promet"),
+            )
         }
         spaseno.isNullOrEmpty() -> {
             // Sve usluge obrisane
-            listOf("Platni promet")
+            listOf(TipUsluge("Platni promet"))
         }
         else -> {
-            // Normalno ucitavanje liste
-            spaseno.split(";")
+            spaseno.split(";").map {
+                val dijelovi = it.split("|")
+                if (dijelovi.size == 2) {
+                    TipUsluge(naziv = dijelovi[0], bezProvizije = dijelovi[1].toBoolean())
+                } else {
+                    // Fallback
+                    TipUsluge(naziv = dijelovi[0], bezProvizije = false)
+                }
+            }
         }
     }
 }
-fun spasiUsluge(prefs: SharedPreferences, usluge: List<String>) {
-    prefs.edit().putString("lista_usluga", usluge.joinToString(";")).apply()
+
+fun spasiUsluge(prefs: SharedPreferences, usluge: List<TipUsluge>) {
+    val stringZaSnimanje = usluge.joinToString(";") { "${it.naziv}|${it.bezProvizije}" }
+    prefs.edit().putString("lista_usluga", stringZaSnimanje).apply()
 }
