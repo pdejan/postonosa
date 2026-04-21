@@ -1,6 +1,6 @@
 # Poštonoša (Android Aplikacija)
 
-**Poštonoša** je aplikacija napravljen specifično za poštare u Bosni i Hercegovini (i regionu?). Aplikacija omogućava jednostavnu evidenciju i unos uplata komunalnih usluga na dostavnom rejonu koje pošte ovdje nude uz par pogodnosti i sve to naravno offline.
+**Poštonoša** je aplikacija napravljen specifično za poštare u Bosni i Hercegovini (Pošte Srpske). Aplikacija omogućava jednostavnu evidenciju i unos uplata režijskih računa na dostavnom rejonu uz par pogodnosti i sve to offline.
 
 ## Glavne funkcije
 * **Offline:** Aplikacija radi bez interneta.
@@ -36,7 +36,7 @@
 
 # ENGLISH
 
-* **Poštonoša** is an app created specifically for postmen in Bosnia and Herzegovina (and the region?). The application allows for simple logging and entry of utility bill payments within a delivery area, offering a few convenient perks, all of this, of course, completely offline.
+* **Poštonoša** is an app created specifically for postmen in Bosnia and Herzegovina (Pošte Srpske). The application allows for simple logging and entry of utility bill payments within a delivery area, offering a few convenient perks, all while completely offline.
 
 ## Main Features
 * **Offline:** The app works without an internet connection.
