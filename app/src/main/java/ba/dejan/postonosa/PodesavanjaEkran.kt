@@ -407,7 +407,7 @@ fun PodesavanjaEkran(navController: NavController, prefs: SharedPreferences, dao
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text = "POŠTONOŠA v1.5",
+                text = "POŠTONOŠA v1.5.1",
                 fontSize = 14.sp,
                 fontWeight = FontWeight.Bold,
                 color = Color.Gray
