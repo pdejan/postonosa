@@ -1,6 +1,6 @@
 # Poštonoša (Android Aplikacija)
 
-**Poštonoša** je aplikacija napravljen specifično za poštare u Bosni i Hercegovini (Pošte Srpske). Aplikacija omogućava jednostavnu evidenciju i unos uplata režijskih računa na dostavnom rejonu uz par pogodnosti i sve to offline.
+**Poštonoša** je aplikacija napravljena za poštare u Bosni i Hercegovini (Pošte Srpske). Aplikacija omogućava jednostavnu evidenciju i unos uplata režijskih računa na dostavnom rejonu te generisanje pregleda uz par pogodnosti i sve to offline.
 
 ## Glavne funkcije
 * **Offline:** Aplikacija radi bez interneta.
@@ -13,7 +13,7 @@
  2. Pošalji pregled uplata emailom 
  3. Izbor formata Pregleda uplata koji se generiše.
  4. Automatsko ažuriranje provizije. (Zahtjeva internet konekciju)
-* **Sigurnost:** Aplikacija radi potpuno offline, ne prikuplja nikakve podatke pa čak ni analitike bilo o vama, vašem telefonu ili o uplatama koje u nju unesete. Ne komunicira sa vanjskim serverom. Sva pohrana podata se odvija na samom uređaju i nikada ga ne napušta. Aplikacija **mora** imati pristup internetu samo kada morate/želite ažurirati proviziju koja se obračunava.
+* **Sigurnost:** Aplikacija radi potpuno offline, ne prikuplja nikakve podatke pa čak ni analitike bilo o vama, vašem telefonu ili o uplatama koje u nju unesete. Ne komunicira sa vanjskim serverom. Sva pohrana podata se odvija na samom uređaju i nikada ga ne napušta. Aplikacija **mora** imati pristup internetu samo kada morate/želite ažurirati proviziju koja se obračunava i poslati pregled uplata emailom.
 
 ## Informacije o aplikaciji i kodu
 * **Automatsko ažuriranje provizije:** Za računanje provizije kao i stope, aplikacija gleda fajl **naknada.json** u assets folderu. Da bi se omogućilo jednostavno ažuriranje provizije na klik jednog dugmeta u podešavanjima bez potrebnog ažuriranja same aplikacije, taj JSON fajl mora biti hostan negdje online, da bi ga aplikacija mogla povući i spasiti ukoliko je potrebno ažurirati samu proviziju. Varijabla u PodesavanjaEkran.kt mora sadržavati tačnu putanju ka datom fajlu.
@@ -36,7 +36,7 @@
 
 # ENGLISH
 
-* **Poštonoša** is an app created specifically for postmen in Bosnia and Herzegovina (Pošte Srpske). The application allows for simple logging and entry of utility bill payments within a delivery area, offering a few convenient perks, all while completely offline.
+* **Poštonoša** is an app created for postmen in Bosnia and Herzegovina (Pošte Srpske). The application allows for simple logging and entry of utility bill payments within a delivery area, generating report, offering a few convenient perks, all while completely offline.
 
 ## Main Features
 * **Offline:** The app works without an internet connection.
@@ -49,7 +49,7 @@
 2. Send generated overview by email.
 3. Choosing the format for the generated Payment Overview.
 4. Automatic commission updates (Requires an internet connection).
-* **Security & Privacy:** The app works completely offline. It does not collect any data, not even analytics about you, your phone, or the payments you enter. It does not communicate with any external servers. All data storage takes place locally on the device and never leaves it. The app only **requires** internet access when you need/want to update the calculated commission rates.
+* **Security & Privacy:** The app works completely offline. It does not collect any data, not even analytics about you, your phone, or the payments you enter. It does not communicate with any external servers. All data storage takes place locally on the device and never leaves it. The app only **requires** internet access when you need/want to update the calculated commission rates and send generated overview by email.
 
 ## App and Code Information
 * **Automatic Commission Update:** To calculate commissions and rates, the app references the **naknada.json** file located in the assets folder. To enable seamless commission updates via a single button click in the settings without requiring a full app update this JSON file must be hosted online. This allows the app to fetch and save the latest commission data as needed. The variable in PodesavanjaEkran.kt must contain the exact path to this online file.
