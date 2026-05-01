@@ -19,3 +19,10 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+
+# Zabrani brisanje glavne baze i njenih generisanih implementacija
+-keep class * extends androidx.room.RoomDatabase
+-keep class **_Impl { <init>(...); }
+# Zabrani diranje entiteta (tabela)
+-keep @androidx.room.Entity class * { *; }
+-keep @androidx.room.Dao class * { *; }
