@@ -51,7 +51,14 @@ fun PodesavanjaEkran(navController: NavController, prefs: SharedPreferences, dao
     var exportTxt by remember { mutableStateOf(prefs.getBoolean("export_txt", true)) }
     val context = LocalContext.current
     var emailZaSlanje by remember { mutableStateOf(prefs.getString("email_za_slanje", "") ?: "") }
-
+    val dinamickaVerzija = remember {
+        try {
+            val packageInfo = context.packageManager.getPackageInfo(context.packageName, 0)
+            packageInfo.versionName
+        } catch (e: Exception) {
+            "1.0"
+        }
+    }
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -407,7 +414,7 @@ fun PodesavanjaEkran(navController: NavController, prefs: SharedPreferences, dao
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text = "POŠTONOŠA v1.5.1",
+                text = "POŠTONOŠA v$dinamickaVerzija",
                 fontSize = 14.sp,
                 fontWeight = FontWeight.Bold,
                 color = Color.Gray
@@ -434,7 +441,7 @@ fun ucitajUsluge(prefs: SharedPreferences): List<TipUsluge> {
                 TipUsluge("Telemach"),
                 TipUsluge("Voda"),
                 TipUsluge("Smeće"),
-                TipUsluge("RTRS", true),
+                TipUsluge("RTV taksa", true),
                 TipUsluge("Platni promet"),
             )
         }
@@ -455,7 +462,6 @@ fun ucitajUsluge(prefs: SharedPreferences): List<TipUsluge> {
         }
     }
 }
-
 fun spasiUsluge(prefs: SharedPreferences, usluge: List<TipUsluge>) {
     val stringZaSnimanje = usluge.joinToString(";") { "${it.naziv}|${it.bezProvizije}" }
     prefs.edit().putString("lista_usluga", stringZaSnimanje).apply()
