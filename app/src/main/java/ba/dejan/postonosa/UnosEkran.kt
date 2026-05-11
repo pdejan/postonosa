@@ -23,6 +23,9 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import ba.dejan.postonosa.ui.theme.GlavnaBoja
+import ba.dejan.postonosa.ui.theme.Pozadina
+import ba.dejan.postonosa.ui.theme.SporednaBoja
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

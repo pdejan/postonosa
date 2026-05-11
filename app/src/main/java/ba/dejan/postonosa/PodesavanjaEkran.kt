@@ -26,6 +26,9 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import ba.dejan.postonosa.ui.theme.GlavnaBoja
+import ba.dejan.postonosa.ui.theme.Pozadina
+import ba.dejan.postonosa.ui.theme.SporednaBoja
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -45,6 +48,7 @@ fun PodesavanjaEkran(navController: NavController, prefs: SharedPreferences, dao
     var bezProvizijeCheckbox by remember { mutableStateOf(false) }
     val ime = prefs.getString("ime_prezime", "Nepoznat") ?: "Nepoznat"
     val idRadnika = prefs.getString("radnik_id", "000") ?: "000"
+    val rejon = prefs.getString("radni_rejon", "000") ?: "000"
     val posta = prefs.getString("posta_naziv", "Nepoznato") ?: "Nepoznato"
     var ucitavanje by remember { mutableStateOf(false) }
     var exportPdf by remember { mutableStateOf(prefs.getBoolean("export_pdf", true)) }
@@ -81,9 +85,10 @@ fun PodesavanjaEkran(navController: NavController, prefs: SharedPreferences, dao
             elevation = CardDefaults.cardElevation(4.dp)
         ) {
             Column(modifier = Modifier.padding(16.dp).fillMaxWidth()) {
-                Text("Prijavljeni korisnik", fontSize = 12.sp, color = Color.Gray)
+                Text("Prijavljeni korisnik", fontSize = 14.sp, color = Color.Gray)
                 Text("Ime i prezime: $ime", fontSize = 16.sp)
                 Text("Šifra radnika: $idRadnika", fontSize = 16.sp)
+                Text("Rejon: $rejon", fontSize = 16.sp)
                 Text("Pošta: $posta", fontSize = 16.sp)
                 Spacer(modifier = Modifier.height(16.dp))
                 Button(

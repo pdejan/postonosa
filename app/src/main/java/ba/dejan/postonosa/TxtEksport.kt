@@ -17,13 +17,14 @@ object TxtEksport {
         val prefs = context.getSharedPreferences("PostonosaPrefs", Context.MODE_PRIVATE)
         val radnikIme = prefs.getString("ime_prezime", "Nepoznat") ?: "Nepoznat"
         val radnikId = prefs.getString("radnik_id", "000") ?: "000"
+        val rejon = prefs.getString("radni_rejon", "000") ?: "000"
         val posta = prefs.getString("posta_naziv", "Posta") ?: "Posta"
         val datum = SimpleDateFormat("dd.MM.yyyy | HH:mm", Locale.getDefault()).format(Date())
         val sb = java.lang.StringBuilder()
         // ZAGLAVLJE
         sb.append("PREGLED IZVRSENIH UPLATA NA DOSTAVNOM REJONU\n")
         sb.append("JPM: $posta | $radnikId $radnikIme\n")
-        sb.append("Datum: $datum\n")
+        sb.append("Rejon: $rejon | Datum: $datum\n")
         // 65 karaktera
         sb.append("-----------------------------------------------------------------\n")
         // R.br(5) + Vrsta(20) + Iznos(9) + Postarina(9) + Ukupno(9) + Br.tran.(9) + 4 razmaka = 65 karaktera

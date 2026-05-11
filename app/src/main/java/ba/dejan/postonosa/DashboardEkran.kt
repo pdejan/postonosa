@@ -19,6 +19,9 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import ba.dejan.postonosa.ui.theme.GlavnaBoja
+import ba.dejan.postonosa.ui.theme.Pozadina
+import ba.dejan.postonosa.ui.theme.SporednaBoja
 
 @Composable
 fun DashboardEkran(navController: NavController, dao: RacunDao) {
@@ -91,7 +94,7 @@ fun DashboardEkran(navController: NavController, dao: RacunDao) {
             shape = RoundedCornerShape(16.dp)
         ) {
             Column(modifier = Modifier.padding(24.dp).fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
-                Text("STANJE KASE", color = Color.Gray, fontSize = 12.sp)
+                Text("STANJE KASE", color = Color.Gray, fontSize = 14.sp)
                 Text("${String.format("%.2f", ukupnoStanje)} KM", color = GlavnaBoja, fontSize = 42.sp, fontWeight = FontWeight.ExtraBold)
             }
         }

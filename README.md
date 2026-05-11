@@ -17,7 +17,7 @@
 
 ## Informacije o aplikaciji i kodu
 * **Automatsko ažuriranje provizije:** Za računanje provizije kao i stope, aplikacija gleda fajl **naknada.json** u assets folderu. Da bi se omogućilo jednostavno ažuriranje provizije na klik jednog dugmeta u podešavanjima bez potrebnog ažuriranja same aplikacije, taj JSON fajl mora biti hostan negdje online, da bi ga aplikacija mogla povući i spasiti ukoliko je potrebno ažurirati samu proviziju. Varijabla u PodesavanjaEkran.kt mora sadržavati tačnu putanju ka datom fajlu.
-* **Boje:** Tema aplikacije je urađena u dvije akcentne boje, GlavnaBoja (u ovom slučaju žuta) i SporednaBoja (crna). Ukoliko se mjenja akcentni izgled aplikacije dovoljno je promjeniti ove dvije varijable u Boje.kt
+* **Boje:** Tema aplikacije je urađena u dvije akcentne boje, GlavnaBoja (u ovom slučaju žuta) i SporednaBoja (crna). Ukoliko se mjenja akcentni izgled aplikacije dovoljno je promjeniti ove dvije varijable u ui.theme > Color.kt
 * **Resursi trećih lica:** Ikona aplikacije je preuzeta sa **FlatIcon**. Ja posjedujem licencu za ovu primjenu (aplikacija), ali ukoliko kompajlate kod za neku drugu upotrebu obavezno je navođenje autora kako slijedi: Email icons created by [Freepik - Flaticon](https://www.flaticon.com/free-icons/email).  
 
 <h2 align="center">Screenshots</h2>
@@ -53,5 +53,5 @@
 
 ## App and Code Information
 * **Automatic Commission Update:** To calculate commissions and rates, the app references the **naknada.json** file located in the assets folder. To enable seamless commission updates via a single button click in the settings without requiring a full app update this JSON file must be hosted online. This allows the app to fetch and save the latest commission data as needed. The variable in PodesavanjaEkran.kt must contain the exact path to this online file.
-* **Colors:** The app's theme is built around two accent colors: GlavnaBoja (Main Color, yellow in this case) and SporednaBoja (Secondary Color, black). If you want to change the app's visual identity, you simply need to modify these two variables in Boje.kt.
+* **Colors:** The app's theme is built around two accent colors: GlavnaBoja (Main Color, yellow in this case) and SporednaBoja (Secondary Color, black). If you want to change the app's visual identity, you simply need to modify these two variables in ui.theme > Color.kt.
 * **Third-party assets:** The application icon was sourced from **Flaticon**. I hold a valid license for its use in this specific application. However, if you recompile the code for any other purpose, attribution is required as follows: Email icons created by [Freepik - Flaticon](https://www.flaticon.com/free-icons/email).

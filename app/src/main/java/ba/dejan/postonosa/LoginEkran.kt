@@ -1,6 +1,7 @@
 package ba.dejan.postonosa
 
 import android.content.SharedPreferences
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
@@ -8,6 +9,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -15,12 +17,18 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.foundation.text.KeyboardOptions
+import ba.dejan.postonosa.ui.theme.GlavnaBoja
+import ba.dejan.postonosa.ui.theme.Pozadina
+import ba.dejan.postonosa.ui.theme.SporednaBoja
 
 @Composable
 fun LoginEkran(navController: NavController, prefs: SharedPreferences) {
+    val context = LocalContext.current
     var radnikId by remember { mutableStateOf("") }
+    var rejon by remember { mutableStateOf("") }
     var imePrezime by remember { mutableStateOf("") }
     var posta by remember { mutableStateOf("") }
+
     Column(
         modifier = Modifier.fillMaxSize().background(Pozadina).padding(24.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -40,26 +48,7 @@ fun LoginEkran(navController: NavController, prefs: SharedPreferences) {
             color = SporednaBoja
         )
         Spacer(modifier = Modifier.height(48.dp))
-        Text(text = "PRIJAVA", fontSize = 24.sp, fontWeight = FontWeight.Bold)
-        Spacer(modifier = Modifier.height(32.dp))
-        OutlinedTextField(
-            value = radnikId,
-            onValueChange = { noviUnos ->
-                val samoBrojevi = noviUnos.filter {it.isDigit()}
-                if (samoBrojevi.length <= 10){
-                   radnikId = samoBrojevi
-                }
-            },
-            label = { Text("Šifra radnika", color = Color.Gray) },
-            singleLine = true,
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-            colors = OutlinedTextFieldDefaults.colors(
-                focusedBorderColor = GlavnaBoja,
-                focusedLabelColor = GlavnaBoja,
-                cursorColor = SporednaBoja
-            ),
-            modifier = Modifier.fillMaxWidth()
-        )
+        Text(text = "Unesi svoje identifikacione podatke.", fontSize = 14.sp, color = Color.Gray)
         Spacer(modifier = Modifier.height(8.dp))
         OutlinedTextField(
             value = imePrezime,
@@ -78,6 +67,33 @@ fun LoginEkran(navController: NavController, prefs: SharedPreferences) {
             ),
             modifier = Modifier.fillMaxWidth()
         )
+        Spacer(modifier = Modifier.height(8.dp))
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            // Šifra radnika
+            OutlinedTextField(
+                value = radnikId,
+                onValueChange = { if (it.length <= 10 && it.all { c -> c.isDigit() }) radnikId = it },
+                label = { Text("Šifra", color = Color.Gray) },
+                singleLine = true,
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                modifier = Modifier.weight(0.6f),
+                colors = OutlinedTextFieldDefaults.colors(focusedBorderColor = GlavnaBoja, cursorColor = SporednaBoja)
+            )
+
+            // Rejon
+            OutlinedTextField(
+                value = rejon,
+                onValueChange = { if (it.length <= 4 && it.all { c -> c.isDigit() }) rejon = it },
+                label = { Text("Rejon", color = Color.Gray) },
+                singleLine = true,
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                modifier = Modifier.weight(0.4f),
+                colors = OutlinedTextFieldDefaults.colors(focusedBorderColor = GlavnaBoja, cursorColor = SporednaBoja)
+            )
+        }
         Spacer(modifier = Modifier.height(8.dp))
         OutlinedTextField(
             value = posta,
@@ -99,9 +115,10 @@ fun LoginEkran(navController: NavController, prefs: SharedPreferences) {
         Spacer(modifier = Modifier.height(32.dp))
         Button(
             onClick = {
-                if (radnikId.isNotBlank() && imePrezime.isNotBlank()) {
+                if (radnikId.isNotBlank() && rejon.isNotBlank() && imePrezime.isNotBlank() && posta.isNotBlank()) {
                     prefs.edit().apply {
                         putString("radnik_id", radnikId)
+                        putString("radni_rejon", rejon)
                         putString("ime_prezime", imePrezime)
                         putString("posta_naziv", posta)
                         apply()
@@ -109,6 +126,8 @@ fun LoginEkran(navController: NavController, prefs: SharedPreferences) {
                     navController.navigate("dashboard") {
                         popUpTo("login") { inclusive = true }
                     }
+                } else {
+                    Toast.makeText(context, "Unesi sve identifikacione podatke!", Toast.LENGTH_SHORT).show()
                 }
             },
             modifier = Modifier.fillMaxWidth().height(60.dp),
@@ -123,4 +142,3 @@ fun LoginEkran(navController: NavController, prefs: SharedPreferences) {
         }
     }
 }
-

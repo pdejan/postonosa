@@ -13,11 +13,9 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        // Inicijalizacija baze i preferenci ODMAH
         val db = AppDatabase.getDatabase(this)
         val dao = db.racunDao()
         val prefs = getSharedPreferences("PostonosaPrefs", Context.MODE_PRIVATE)
@@ -35,9 +33,9 @@ class MainActivity : ComponentActivity() {
                             androidx.core.view.WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = true
                         }
                     }
-                    // Provjera logina
                     val sacuvaniId = prefs.getString("radnik_id", null)
-                    val startDestinacija = if (sacuvaniId == null) "login" else "dashboard"
+                    val sacuvaniRejon = prefs.getString("radni_rejon", null)
+                    val startDestinacija = if (sacuvaniId != null && sacuvaniRejon != null) "dashboard" else "login"
                     NavHost(navController = navController, startDestination = startDestinacija) {
                         composable("login") {
                             LoginEkran(navController, prefs)

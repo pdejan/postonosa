@@ -25,6 +25,7 @@ object PdfEksport {
         val prefs = context.getSharedPreferences("PostonosaPrefs", Context.MODE_PRIVATE)
         val radnikIme = prefs.getString("ime_prezime", "Nepoznat") ?: "Nepoznat"
         val radnikId = prefs.getString("radnik_id", "000") ?: "000"
+        val rejon = prefs.getString("radni_rejon", "000") ?: "000"
         val posta = prefs.getString("posta_naziv", "Pošta") ?: "Pošta"
         val datum = SimpleDateFormat("dd.MM.yyyy  |  HH:mm", Locale.getDefault()).format(Date())
 
@@ -47,7 +48,7 @@ object PdfEksport {
         paint.textSize = 11f
         canvas.drawText("PREGLED IZVRŠENIH UPLATA NA DOSTAVNOM REJONU", 40f, 25f, paint)
         canvas.drawText("JPM: $posta  |  $radnikId $radnikIme", 40f, 40f, paint)
-        canvas.drawText("Datum: $datum", 40f, 55f, paint)
+        canvas.drawText("Rejon: $rejon  |  Datum: $datum", 40f, 55f, paint)
         canvas.drawLine(40f, 65f, 555f, 65f, paint)
         paint.textSize = 10f
         var yPos = nacrtajZaglavljeTabele(canvas, 80f)

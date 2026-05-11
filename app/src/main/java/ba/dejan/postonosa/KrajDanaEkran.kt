@@ -29,6 +29,9 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.style.TextOverflow
+import ba.dejan.postonosa.ui.theme.GlavnaBoja
+import ba.dejan.postonosa.ui.theme.Pozadina
+import ba.dejan.postonosa.ui.theme.SporednaBoja
 
 @Composable
 fun KrajDanaEkran(navController: NavController, dao: RacunDao, prefs: SharedPreferences) {
@@ -67,7 +70,10 @@ fun KrajDanaEkran(navController: NavController, dao: RacunDao, prefs: SharedPref
     val razlika = fizickiNovac - ukupnoOcekivano
     val zavrsiSmjenuLogika = {
         // SIGURNOSNA PROVJERA
-        if (razlika in -0.005..0.005) {
+        if (racuni.isEmpty()) {
+            Toast.makeText(context, "Nema unešenih uplata!", Toast.LENGTH_SHORT).show()
+        }
+        else if (razlika in -0.005..0.005) {
             // KASA SE SLAŽE
             val listaApoena = listOf(
                 "200.00" to kom200, "100.00" to kom100, "50.00" to kom50, "20.00" to kom20, "10.00" to kom10,
