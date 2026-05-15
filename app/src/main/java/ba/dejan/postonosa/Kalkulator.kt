@@ -4,6 +4,7 @@ import android.content.Context
 import org.json.JSONObject
 import java.io.File
 
+data class FiksnaProvizija(val id: String, val naziv: String, val iznos: Double)
 object Kalkulator {
     private fun procitajJson(context: Context): String {
         val lokalniFajl = File(context.filesDir, "naknada.json")
@@ -13,14 +14,31 @@ object Kalkulator {
             context.assets.open("naknada.json").bufferedReader().use { it.readText() }
         }
     }
+    fun dohvatiFiksneProvizije(context: Context): List<FiksnaProvizija> {
+        val lista = mutableListOf<FiksnaProvizija>()
+        try {
+            val jsonString = procitajJson(context)
+            val json = JSONObject(jsonString)
+            if (json.has("fiksne_naknade")) {
+                val niz = json.getJSONArray("fiksne_naknade")
+                for (i in 0 until niz.length()) {
+                    val obj = niz.getJSONObject(i)
+                    lista.add(FiksnaProvizija(obj.getString("id"), obj.getString("naziv"), obj.getDouble("iznos")))
+                }
+            }
+        } catch (e: Exception) { e.printStackTrace() }
+        return lista
+    }
+    fun dohvatiIznosFiksne(context: Context, fiksnaId: String): Double? {
+        val fiksneListe = dohvatiFiksneProvizije(context)
+        return fiksneListe.find { it.id == fiksnaId }?.iznos
+    }
     fun izracunaj(context: Context, iznos: Double): Double {
         if (iznos <= 0.0) return 0.0
-
         return try {
             val jsonString = procitajJson(context)
             val json = JSONObject(jsonString)
             val provizijeNiz = json.getJSONArray("naknada")
-
             var izracunataProvizija = 0.0
             // Parse iz jsona
             for (i in 0 until provizijeNiz.length()) {

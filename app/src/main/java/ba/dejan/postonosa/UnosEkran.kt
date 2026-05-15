@@ -38,7 +38,14 @@ fun UnosEkran(navController: NavController, dao: RacunDao, prefs: SharedPreferen
     var izabranaUsluga by remember { mutableStateOf(usluge.firstOrNull() ?: TipUsluge("Platni promet", false)) }
     var expanded by remember { mutableStateOf(false) }
     val iznos = iznosTekst.toDoubleOrNull() ?: 0.0
-    val provizija = if (izabranaUsluga.bezProvizije) 0.0 else Kalkulator.izracunaj(context, iznos)
+    val provizija = when {
+        izabranaUsluga.bezProvizije -> 0.0
+        izabranaUsluga.fiksnaId != null -> {
+            val iznosIzJsona = Kalkulator.dohvatiIznosFiksne(context, izabranaUsluga.fiksnaId!!)
+            iznosIzJsona ?: Kalkulator.izracunaj(context, iznos)
+        }
+        else -> Kalkulator.izracunaj(context, iznos)
+    }
     val snimiUplatu = {
         if (iznos > 0) {
             val racun = Racun(tipUsluge = izabranaUsluga.naziv, iznos = iznos, provizija = provizija)
