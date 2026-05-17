@@ -14,8 +14,8 @@ android {
         applicationId = "ba.dejan.postonosa"
         minSdk = 26
         targetSdk = 36
-        versionCode = 11
-        versionName = "1.6"
+        versionCode = 12
+        versionName = "1.6.1"
         ksp {
             arg("room.schemaLocation", "$projectDir/schemas")
         }

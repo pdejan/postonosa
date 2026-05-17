@@ -259,58 +259,82 @@ fun PodesavanjaEkran(navController: NavController, prefs: SharedPreferences, dao
             AlertDialog(
                 onDismissRequest = { prikaziDialogZaNovuUslugu = false },
                 containerColor = Color.White,
-                title = { Text("NOVA USLUGA", fontSize = 20.sp, fontWeight = FontWeight.Bold) },
                 text = {
                     Column {
+                        Text(
+                            text = "NOVA USLUGA",
+                            fontSize = 20.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = Color.Black
+                        )
+                        Spacer(modifier = Modifier.height(8.dp))
+                        // input box
                         OutlinedTextField(
                             value = tekstNoveUsluge,
                             onValueChange = { tekstNoveUsluge = it },
                             label = { Text("Naziv usluge", color = Color.Gray) },
+                            textStyle = androidx.compose.ui.text.TextStyle(fontSize = 20.sp),
                             singleLine = true,
                             colors = OutlinedTextFieldDefaults.colors(focusedBorderColor = GlavnaBoja, focusedLabelColor = SporednaBoja)
                         )
-                        Spacer(modifier = Modifier.height(6.dp))
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
+                        Spacer(modifier = Modifier.height(16.dp))
+                        Text(
+                            text = "Označi jednu od ponuđenih opcija ispod ukoliko se provizija ne obračunava standardno.",
+                            fontSize = 12.sp,
+                            color = Color.Gray,
+                            modifier = Modifier.padding(bottom = 8.dp)
+                        )
+                        // skrol kontejner
+                        Column(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .clickable {
-                                    bezProvizijeCheckbox = !bezProvizijeCheckbox
-                                    if(bezProvizijeCheckbox) odabranaFiksna = null
-                                }
-                                //.padding(vertical = 4.dp)
+                                .heightIn(max = 250.dp)
+                                .background(Color(0xFFF9F9F9), shape = androidx.compose.foundation.shape.RoundedCornerShape(8.dp))
+                                .verticalScroll(rememberScrollState())
+                                .padding(8.dp)
                         ) {
-                            Checkbox(
-                                checked = bezProvizijeCheckbox,
-                                onCheckedChange = {
-                                    bezProvizijeCheckbox = it
-                                    if(it) odabranaFiksna = null
-                                },
-                                colors = CheckboxDefaults.colors(checkedColor = GlavnaBoja, checkmarkColor = SporednaBoja)
-                            )
-                            Text("Bez provizije")
-                        }
-                        // Fiksne provizije iz JSONA
-                        fiksneOpcije.forEach { fiksna ->
                             Row(
                                 verticalAlignment = Alignment.CenterVertically,
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .clickable {
-                                        if (odabranaFiksna == fiksna) odabranaFiksna = null
-                                        else { odabranaFiksna = fiksna; bezProvizijeCheckbox = false }
+                                        bezProvizijeCheckbox = !bezProvizijeCheckbox
+                                        if(bezProvizijeCheckbox) odabranaFiksna = null
                                     }
                                     //.padding(vertical = 4.dp)
                             ) {
                                 Checkbox(
-                                    checked = odabranaFiksna == fiksna,
-                                    onCheckedChange = { isChecked ->
-                                        if (isChecked) { odabranaFiksna = fiksna; bezProvizijeCheckbox = false }
-                                        else odabranaFiksna = null
+                                    checked = bezProvizijeCheckbox,
+                                    onCheckedChange = {
+                                        bezProvizijeCheckbox = it
+                                        if(it) odabranaFiksna = null
                                     },
                                     colors = CheckboxDefaults.colors(checkedColor = GlavnaBoja, checkmarkColor = SporednaBoja)
                                 )
-                                Text("${fiksna.naziv} (${fiksna.iznos} KM)")
+                                Text("Bez provizije", fontSize = 15.sp)
+                            }
+                            // Fiksne provizije iz JSONA
+                            fiksneOpcije.forEach { fiksna ->
+                                Row(
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .clickable {
+                                            if (odabranaFiksna == fiksna) odabranaFiksna = null
+                                            else { odabranaFiksna = fiksna; bezProvizijeCheckbox = false }
+                                        }
+                                        //.padding(vertical = 4.dp)
+                                ) {
+                                    Checkbox(
+                                        checked = odabranaFiksna == fiksna,
+                                        onCheckedChange = { isChecked ->
+                                            if (isChecked) { odabranaFiksna = fiksna; bezProvizijeCheckbox = false }
+                                            else odabranaFiksna = null
+                                        },
+                                        colors = CheckboxDefaults.colors(checkedColor = GlavnaBoja, checkmarkColor = SporednaBoja)
+                                    )
+                                    Text("${fiksna.naziv} (${fiksna.iznos} KM)", fontSize = 15.sp)
+                                }
                             }
                         }
                     }
@@ -318,14 +342,20 @@ fun PodesavanjaEkran(navController: NavController, prefs: SharedPreferences, dao
                 confirmButton = {
                     Button(
                         onClick = {
-                            if (tekstNoveUsluge.isNotBlank() && !uslugeList.any { it.naziv == tekstNoveUsluge }) {
-                                val novaLista = uslugeList + TipUsluge(tekstNoveUsluge.trim(), bezProvizijeCheckbox, odabranaFiksna?.id)
-                                uslugeList = novaLista
-                                spasiUsluge(prefs, novaLista)
+                            if (tekstNoveUsluge.isNotBlank()) {
+                                if (!uslugeList.any { it.naziv == tekstNoveUsluge }) {
+                                    val novaLista = uslugeList + TipUsluge(tekstNoveUsluge.trim(), bezProvizijeCheckbox, odabranaFiksna?.id)
+                                    uslugeList = novaLista
+                                    spasiUsluge(prefs, novaLista)
+                                    tekstNoveUsluge = ""
+                                    bezProvizijeCheckbox = false
+                                    prikaziDialogZaNovuUslugu = false
+                                } else {
+                                    Toast.makeText(context, "Usluga sa ovim imenom već postoji.", Toast.LENGTH_SHORT).show()
+                                }
+                            } else {
+                                Toast.makeText(context, "Naziv usluge ne može biti prazan.", Toast.LENGTH_SHORT).show()
                             }
-                            tekstNoveUsluge = ""
-                            bezProvizijeCheckbox = false
-                            prikaziDialogZaNovuUslugu = false
                         },
                         colors = ButtonDefaults.buttonColors(containerColor = GlavnaBoja)
                     ) {
