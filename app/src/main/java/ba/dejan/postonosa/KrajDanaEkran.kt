@@ -108,8 +108,7 @@ fun KrajDanaEkran(navController: NavController, dao: RacunDao, prefs: SharedPref
             }
             Toast.makeText(context, poruka, Toast.LENGTH_SHORT).show()
             dao.obrisiSve()
-            Sesija.pocetakKorisnika.value = System.currentTimeMillis()
-            Sesija.osvjeziBazu.value += 1
+            Sesija.postaviPocetakKorisnika(prefs)
             navController.popBackStack()
 
         } else {

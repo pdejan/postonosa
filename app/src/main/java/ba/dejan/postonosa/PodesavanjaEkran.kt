@@ -37,7 +37,9 @@ import java.io.File
 import java.net.URL
 
 // LINK ZA AZURIRANJE PROVIZIJE (Hostani JSON fajl se mora zvati "naknada.json")
-const val PROVIZIJA_URL = "https://raw.githubusercontent.com/pdejan/dejan.ba/refs/heads/main/naknada.json"
+const val PROVIZIJA_URL = "https://raw.githubusercontent.com/pdejan/dejan.ba/refs/heads/main/postonosa_naknada/naknada.json"
+const val PROVIZIJA_POTPIS_URL = "https://raw.githubusercontent.com/pdejan/dejan.ba/refs/heads/main/postonosa_naknada/naknada.json.sig"
+private const val MAKS_DUZINA_NAZIVA_USLUGE = 30
 
 @Composable
 fun PodesavanjaEkran(navController: NavController, prefs: SharedPreferences, dao: RacunDao) {
@@ -271,7 +273,7 @@ fun PodesavanjaEkran(navController: NavController, prefs: SharedPreferences, dao
                         // input box
                         OutlinedTextField(
                             value = tekstNoveUsluge,
-                            onValueChange = { tekstNoveUsluge = it },
+                            onValueChange = { tekstNoveUsluge = pripremiNazivUslugeZaUnos(it) },
                             label = { Text("Naziv usluge", color = Color.Gray) },
                             textStyle = androidx.compose.ui.text.TextStyle(fontSize = 20.sp),
                             singleLine = true,
@@ -342,9 +344,10 @@ fun PodesavanjaEkran(navController: NavController, prefs: SharedPreferences, dao
                 confirmButton = {
                     Button(
                         onClick = {
-                            if (tekstNoveUsluge.isNotBlank()) {
-                                if (!uslugeList.any { it.naziv == tekstNoveUsluge }) {
-                                    val novaLista = uslugeList + TipUsluge(tekstNoveUsluge.trim(), bezProvizijeCheckbox, odabranaFiksna?.id)
+                            val nazivUsluge = normalizujNazivUsluge(tekstNoveUsluge)
+                            if (nazivUsluge.isNotBlank()) {
+                                if (!uslugeList.any { it.naziv.equals(nazivUsluge, ignoreCase = true) }) {
+                                    val novaLista = uslugeList + TipUsluge(nazivUsluge, bezProvizijeCheckbox, odabranaFiksna?.id)
                                     uslugeList = novaLista
                                     spasiUsluge(prefs, novaLista)
                                     tekstNoveUsluge = ""
@@ -453,9 +456,14 @@ fun PodesavanjaEkran(navController: NavController, prefs: SharedPreferences, dao
                         ucitavanje = true
                         coroutineScope.launch(Dispatchers.IO) {
                             try {
-                                val skinutiTekst = URL(PROVIZIJA_URL).readText()
+                                val skinutiJson = URL(PROVIZIJA_URL).readBytes()
+                                val skinutiPotpis = URL(PROVIZIJA_POTPIS_URL).readText()
+                                if (!NaknadaPotpis.validan(skinutiJson, skinutiPotpis)) {
+                                    throw SecurityException("Potpis provizije nije validan.")
+                                }
+                                val skinutiTekst = skinutiJson.toString(Charsets.UTF_8)
                                 JSONObject(skinutiTekst)
-                                File(context.filesDir, "naknada.json").writeText(skinutiTekst)
+                                File(context.filesDir, "naknada.json").writeBytes(skinutiJson)
                                 withContext(Dispatchers.Main) {
                                     ucitavanje = false
                                     Toast.makeText(context, "Provizija uspješno ažurirana!", Toast.LENGTH_LONG).show()
@@ -463,7 +471,12 @@ fun PodesavanjaEkran(navController: NavController, prefs: SharedPreferences, dao
                             } catch (e: Exception) {
                                 withContext(Dispatchers.Main) {
                                     ucitavanje = false
-                                    Toast.makeText(context, "Greška pri ažuriranju. Provjerite internet.", Toast.LENGTH_LONG).show()
+                                    val poruka = if (e is SecurityException) {
+                                        "Provizija nije ažurirana. Potpis nije validan."
+                                    } else {
+                                        "Greška pri ažuriranju. Provjerite internet."
+                                    }
+                                    Toast.makeText(context, poruka, Toast.LENGTH_LONG).show()
                                 }
                             }
                         }
@@ -499,6 +512,21 @@ fun PodesavanjaEkran(navController: NavController, prefs: SharedPreferences, dao
 }
 // Čuvanje liste usluga
 data class TipUsluge(val naziv: String, val bezProvizije: Boolean = false, val fiksnaId: String? = null)
+fun pripremiNazivUslugeZaUnos(unos: String): String {
+    return unos
+        .replace(Regex("[;|\\r\\n]"), "")
+        .replace(Regex("\\s{2,}"), " ")
+        .take(MAKS_DUZINA_NAZIVA_USLUGE)
+}
+
+fun normalizujNazivUsluge(unos: String): String {
+    return pripremiNazivUslugeZaUnos(unos)
+        .replace(Regex("\\s+"), " ")
+        .trim()
+        .take(MAKS_DUZINA_NAZIVA_USLUGE)
+        .trimEnd()
+}
+
 fun ucitajUsluge(prefs: SharedPreferences): List<TipUsluge> {
     val spaseno = prefs.getString("lista_usluga", "PRVI_PUT")
     return when {
@@ -536,6 +564,9 @@ fun ucitajUsluge(prefs: SharedPreferences): List<TipUsluge> {
     }
 }
 fun spasiUsluge(prefs: SharedPreferences, usluge: List<TipUsluge>) {
-    val stringZaSnimanje = usluge.joinToString(";") { "${it.naziv}|${it.bezProvizije}|${it.fiksnaId ?: "null"}" }
+    val stringZaSnimanje = usluge.mapNotNull {
+        val naziv = normalizujNazivUsluge(it.naziv)
+        if (naziv.isBlank()) null else "${naziv}|${it.bezProvizije}|${it.fiksnaId ?: "null"}"
+    }.joinToString(";")
     prefs.edit().putString("lista_usluga", stringZaSnimanje).apply()
 }

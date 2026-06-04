@@ -1,5 +1,6 @@
 package ba.dejan.postonosa
 
+import android.content.SharedPreferences
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -24,7 +25,7 @@ import ba.dejan.postonosa.ui.theme.Pozadina
 import ba.dejan.postonosa.ui.theme.SporednaBoja
 
 @Composable
-fun DashboardEkran(navController: NavController, dao: RacunDao) {
+fun DashboardEkran(navController: NavController, dao: RacunDao, prefs: SharedPreferences) {
     // Stoperica
     val trigger = Sesija.osvjeziBazu.value
     val pocetak = Sesija.pocetakKorisnika.value
@@ -125,8 +126,7 @@ fun DashboardEkran(navController: NavController, dao: RacunDao) {
                         }
                         Button(
                             onClick = {
-                                Sesija.pocetakKorisnika.value = System.currentTimeMillis()
-                                Sesija.osvjeziBazu.value += 1
+                                Sesija.postaviPocetakKorisnika(prefs)
                             },
                             colors = ButtonDefaults.buttonColors(containerColor = SporednaBoja)
                         ) {

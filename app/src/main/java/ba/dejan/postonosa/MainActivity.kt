@@ -19,6 +19,7 @@ class MainActivity : ComponentActivity() {
         val db = AppDatabase.getDatabase(this)
         val dao = db.racunDao()
         val prefs = getSharedPreferences("PostonosaPrefs", Context.MODE_PRIVATE)
+        Sesija.ucitajPocetakKorisnika(prefs)
         setContent {
             MaterialTheme {
                 Surface(
@@ -41,7 +42,7 @@ class MainActivity : ComponentActivity() {
                             LoginEkran(navController, prefs)
                         }
                         composable("dashboard") {
-                            DashboardEkran(navController, dao)
+                            DashboardEkran(navController, dao, prefs)
                         }
                         composable("unos") {
                             UnosEkran(navController, dao, prefs)

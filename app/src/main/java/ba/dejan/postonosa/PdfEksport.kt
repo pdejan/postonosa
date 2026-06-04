@@ -149,8 +149,9 @@ object PdfEksport {
         pdfDocument.finishPage(page)
         try {
             val datumVrijemeFajl = SimpleDateFormat("dd_MM_yyyy_HH_mm", Locale.getDefault()).format(Date())
-            val sigurnoIme = radnikIme.replace(" ", "_")
-            val imeFajla = "Pregled_uplata_${radnikId}_${sigurnoIme}_${datumVrijemeFajl}.pdf"
+            val siguranRadnikId = siguranDioImenaFajla(radnikId, "000")
+            val sigurnoIme = siguranDioImenaFajla(radnikIme, "Nepoznat")
+            val imeFajla = "Pregled_uplata_${siguranRadnikId}_${sigurnoIme}_${datumVrijemeFajl}.pdf"
             val contentValues = ContentValues().apply {
                 put(MediaStore.MediaColumns.DISPLAY_NAME, imeFajla)
                 put(MediaStore.MediaColumns.MIME_TYPE, "application/pdf")

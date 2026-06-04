@@ -53,10 +53,7 @@ fun LoginEkran(navController: NavController, prefs: SharedPreferences) {
         OutlinedTextField(
             value = imePrezime,
             onValueChange = { noviUnos ->
-                val bezNovogReda = noviUnos.replace("\n", "")
-                if (bezNovogReda.length <= 30){
-                    imePrezime = bezNovogReda
-                }
+                imePrezime = pripremiKratkiTekstZaUnos(noviUnos)
             },
             label = { Text("Ime i prezime", color = Color.Gray) },
             singleLine = true,
@@ -76,7 +73,7 @@ fun LoginEkran(navController: NavController, prefs: SharedPreferences) {
             OutlinedTextField(
                 value = radnikId,
                 onValueChange = { if (it.length <= 10 && it.all { c -> c.isDigit() }) radnikId = it },
-                label = { Text("Šifra", color = Color.Gray) },
+                label = { Text("Šifra radnika", color = Color.Gray) },
                 singleLine = true,
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                 modifier = Modifier.weight(0.6f),
@@ -98,10 +95,7 @@ fun LoginEkran(navController: NavController, prefs: SharedPreferences) {
         OutlinedTextField(
             value = posta,
             onValueChange = { noviUnos ->
-                val bezNovogReda = noviUnos.replace("\n", "")
-                if (bezNovogReda.length <= 30) {
-                    posta = bezNovogReda
-                }
+                posta = pripremiKratkiTekstZaUnos(noviUnos)
             },
             label = { Text("Pošta (npr. 74101 Doboj)", color = Color.Gray) },
             singleLine = true,
@@ -115,14 +109,17 @@ fun LoginEkran(navController: NavController, prefs: SharedPreferences) {
         Spacer(modifier = Modifier.height(32.dp))
         Button(
             onClick = {
-                if (radnikId.isNotBlank() && rejon.isNotBlank() && imePrezime.isNotBlank() && posta.isNotBlank()) {
+                val normalizovanoIme = normalizujKratkiTekst(imePrezime)
+                val normalizovanaPosta = normalizujKratkiTekst(posta)
+                if (radnikId.isNotBlank() && rejon.isNotBlank() && normalizovanoIme.isNotBlank() && normalizovanaPosta.isNotBlank()) {
                     prefs.edit().apply {
                         putString("radnik_id", radnikId)
                         putString("radni_rejon", rejon)
-                        putString("ime_prezime", imePrezime)
-                        putString("posta_naziv", posta)
+                        putString("ime_prezime", normalizovanoIme)
+                        putString("posta_naziv", normalizovanaPosta)
                         apply()
                     }
+                    Sesija.postaviPocetakKorisnika(prefs)
                     navController.navigate("dashboard") {
                         popUpTo("login") { inclusive = true }
                     }
