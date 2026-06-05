@@ -36,7 +36,7 @@ import org.json.JSONObject
 import java.io.File
 import java.net.URL
 
-// LINK ZA AZURIRANJE PROVIZIJE (Hostani JSON fajl se mora zvati "naknada.json")
+// LINK ZA AZURIRANJE PROVIZIJE + NJEGOV POTPIS (Hostani JSON fajl se mora zvati "naknada.json")
 const val PROVIZIJA_URL = "https://raw.githubusercontent.com/pdejan/dejan.ba/refs/heads/main/postonosa_naknada/naknada.json"
 const val PROVIZIJA_POTPIS_URL = "https://raw.githubusercontent.com/pdejan/dejan.ba/refs/heads/main/postonosa_naknada/naknada.json.sig"
 private const val MAKS_DUZINA_NAZIVA_USLUGE = 30
