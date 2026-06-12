@@ -86,7 +86,7 @@ fun ListaEkran(navController: NavController, dao: RacunDao) {
             }
         }
     }
-    // DIALOG ZA POTVRDU BRISANJA
+    // POTVRDA BRISANJA
     racunZaBrisanje?.let { racun ->
         AlertDialog(
             onDismissRequest = { racunZaBrisanje = null },
@@ -96,7 +96,6 @@ fun ListaEkran(navController: NavController, dao: RacunDao) {
                 Column {
                     Text("Da li sigurno želiš obrisati ovu uplatu?", fontSize = 16.sp, color = Color.Black)
                     Spacer(modifier = Modifier.height(12.dp))
-                    // Mini-kartica uplate, u istom stilu kao kartice u listi
                     Column(
                         modifier = Modifier
                             .fillMaxWidth()

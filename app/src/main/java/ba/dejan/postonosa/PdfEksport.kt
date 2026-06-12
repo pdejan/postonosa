@@ -15,7 +15,7 @@ import java.util.Date
 import java.util.Locale
 
 object PdfEksport {
-    // Vraća true samo ako je fajl stvarno snimljen — pozivalac smije obrisati bazu tek tada
+    // Vraća true samo ako je fajl stvarno snimljen
     fun generisiPdf(context: Context, podPutanja: String, racuni: List<Racun>, apoeni: List<String>, ukupnoFizicki: Double): Boolean {
         val pdfDocument = PdfDocument()
         var stranicaBroj = 1
@@ -184,12 +184,12 @@ object PdfEksport {
         }
     }
 }
-// Ako je MediaStore unos kreiran ali pisanje nije uspjelo, ukloni prazan fajl da ne ostane smeće u Downloads
+// Ako je MediaStore unos kreiran ali snimanje nije uspjelo, ukloni prazan fajl
 fun obrisiNedovrsenFajl(context: Context, uri: Uri?) {
     if (uri == null) return
     try {
         context.contentResolver.delete(uri, null, null)
     } catch (e: Exception) {
-        // ignoriši — fajl ostaje, ali eksport je svakako prijavljen kao neuspio
+        // ignoriši — fajl ostaje, eksport prijavljen kao neuspio
     }
 }

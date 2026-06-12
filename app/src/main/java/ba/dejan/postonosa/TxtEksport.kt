@@ -13,7 +13,7 @@ import java.util.Locale
 
 object TxtEksport {
     @SuppressLint("DefaultLocale")
-    // Vraća true samo ako je fajl stvarno snimljen — pozivalac smije obrisati bazu tek tada
+    // Vraća true samo ako je fajl stvarno snimljen
     fun generisiTxt(context: Context, podPutanja: String, racuni: List<Racun>, apoeni: List<String>, ukupnoFizicki: Double): Boolean {
         val prefs = context.getSharedPreferences("PostonosaPrefs", Context.MODE_PRIVATE)
         val radnikIme = prefs.getString("ime_prezime", "Nepoznat") ?: "Nepoznat"

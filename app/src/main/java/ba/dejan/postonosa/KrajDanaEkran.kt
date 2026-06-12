@@ -108,7 +108,7 @@ fun KrajDanaEkran(navController: NavController, dao: RacunDao, prefs: SharedPref
                 Sesija.postaviPocetakKorisnika(prefs)
                 navController.popBackStack()
             } else {
-                // Eksport pao — uplate ostaju u bazi, poštar može pokušati ponovo
+                // Eksport nije uspio — uplate ostaju u bazi
                 val neuspjelo = listOfNotNull(
                     if (!pdfUspio) "PDF" else null,
                     if (!txtUspio) "TXT" else null

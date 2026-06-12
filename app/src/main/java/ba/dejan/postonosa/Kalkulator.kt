@@ -15,9 +15,17 @@ object Kalkulator {
         }
     }
     fun dohvatiFiksneProvizije(context: Context): List<FiksnaProvizija> {
+        val jsonString = try {
+            procitajJson(context)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            return emptyList()
+        }
+        return dohvatiFiksneProvizijeIzJsona(jsonString)
+    }
+    fun dohvatiFiksneProvizijeIzJsona(jsonString: String): List<FiksnaProvizija> {
         val lista = mutableListOf<FiksnaProvizija>()
         try {
-            val jsonString = procitajJson(context)
             val json = JSONObject(jsonString)
             if (json.has("fiksne_naknade")) {
                 val niz = json.getJSONArray("fiksne_naknade")
@@ -36,28 +44,7 @@ object Kalkulator {
     fun izracunaj(context: Context, iznos: Double): Double {
         if (iznos <= 0.0) return 0.0
         return try {
-            val jsonString = procitajJson(context)
-            val json = JSONObject(jsonString)
-            val provizijeNiz = json.getJSONArray("naknada")
-            var izracunataProvizija = 0.0
-            // Parse iz jsona
-            for (i in 0 until provizijeNiz.length()) {
-                val pravilo = provizijeNiz.getJSONObject(i)
-                val doIznosa = pravilo.getDouble("do_iznosa")
-                // Fallback
-                val fiksno = pravilo.optDouble("fiksno", 0.0)
-                val procenat = pravilo.optDouble("procenat", 0.0)
-                // Racunanje
-                if (iznos <= doIznosa) {
-                    izracunataProvizija = if (procenat > 0.0) {
-                        iznos * (procenat / 100.0)
-                    } else {
-                        fiksno
-                    }
-                    break
-                }
-            }
-            izracunataProvizija
+            izracunajIzJsona(procitajJson(context), iznos)
         } catch (e: Exception) {
             // Sigurnosni fallback AKO nekim čudom nema fajla
             when {
@@ -72,5 +59,29 @@ object Kalkulator {
                 else -> iznos * (0.1 / 100.0)
             }
         }
+    }
+    fun izracunajIzJsona(jsonString: String, iznos: Double): Double {
+        if (iznos <= 0.0) return 0.0
+        val json = JSONObject(jsonString)
+        val provizijeNiz = json.getJSONArray("naknada")
+        var izracunataProvizija = 0.0
+        // Parse iz jsona
+        for (i in 0 until provizijeNiz.length()) {
+            val pravilo = provizijeNiz.getJSONObject(i)
+            val doIznosa = pravilo.getDouble("do_iznosa")
+            // Fallback
+            val fiksno = pravilo.optDouble("fiksno", 0.0)
+            val procenat = pravilo.optDouble("procenat", 0.0)
+            // Racunanje
+            if (iznos <= doIznosa) {
+                izracunataProvizija = if (procenat > 0.0) {
+                    iznos * (procenat / 100.0)
+                } else {
+                    fiksno
+                }
+                break
+            }
+        }
+        return izracunataProvizija
     }
 }

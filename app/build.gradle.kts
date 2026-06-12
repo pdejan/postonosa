@@ -14,8 +14,8 @@ android {
         applicationId = "ba.dejan.postonosa"
         minSdk = 26
         targetSdk = 36
-        versionCode = 13
-        versionName = "1.6.2"
+        versionCode = 14
+        versionName = "1.6.3"
         ksp {
             arg("room.schemaLocation", "$projectDir/schemas")
         }
@@ -51,6 +51,7 @@ dependencies {
     implementation(libs.androidx.navigation.runtime.ktx)
     implementation(libs.androidx.navigation.compose)
     testImplementation(libs.junit)
+    testImplementation("org.json:json:20240303")
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))

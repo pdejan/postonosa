@@ -34,13 +34,30 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.json.JSONObject
 import java.io.File
+import java.io.IOException
+import java.net.HttpURLConnection
 import java.net.URL
 
 // LINK ZA AZURIRANJE PROVIZIJE + NJEGOV POTPIS (Hostani JSON fajl se mora zvati "naknada.json")
 const val PROVIZIJA_URL = "https://raw.githubusercontent.com/pdejan/dejan.ba/refs/heads/main/postonosa_naknada/naknada.json"
 const val PROVIZIJA_POTPIS_URL = "https://raw.githubusercontent.com/pdejan/dejan.ba/refs/heads/main/postonosa_naknada/naknada.json.sig"
 private const val MAKS_DUZINA_NAZIVA_USLUGE = 30
+private const val MREZNI_TIMEOUT_MS = 10_000
 
+// Preuzimanje sa timeout za lošu mrežu
+private fun preuzmiFajl(url: String): ByteArray {
+    val konekcija = URL(url).openConnection() as HttpURLConnection
+    konekcija.connectTimeout = MREZNI_TIMEOUT_MS
+    konekcija.readTimeout = MREZNI_TIMEOUT_MS
+    try {
+        if (konekcija.responseCode != HttpURLConnection.HTTP_OK) {
+            throw IOException("HTTP ${konekcija.responseCode}")
+        }
+        return konekcija.inputStream.use { it.readBytes() }
+    } finally {
+        konekcija.disconnect()
+    }
+}
 @Composable
 fun PodesavanjaEkran(navController: NavController, prefs: SharedPreferences, dao: RacunDao) {
     val coroutineScope = rememberCoroutineScope()
@@ -480,8 +497,8 @@ fun PodesavanjaEkran(navController: NavController, prefs: SharedPreferences, dao
                         ucitavanje = true
                         coroutineScope.launch(Dispatchers.IO) {
                             try {
-                                val skinutiJson = URL(PROVIZIJA_URL).readBytes()
-                                val skinutiPotpis = URL(PROVIZIJA_POTPIS_URL).readText()
+                                val skinutiJson = preuzmiFajl(PROVIZIJA_URL)
+                                val skinutiPotpis = preuzmiFajl(PROVIZIJA_POTPIS_URL).toString(Charsets.UTF_8)
                                 if (!NaknadaPotpis.validan(skinutiJson, skinutiPotpis)) {
                                     throw SecurityException("Potpis provizije nije validan.")
                                 }

@@ -81,7 +81,7 @@ fun UnosEkran(navController: NavController, dao: RacunDao, prefs: SharedPreferen
                     focusedLabelColor = SporednaBoja,
                     cursorColor = SporednaBoja
                 ),
-                modifier = Modifier.menuAnchor().fillMaxWidth()
+                modifier = Modifier.menuAnchor(MenuAnchorType.PrimaryNotEditable).fillMaxWidth()
             )
             ExposedDropdownMenu(
                 expanded = expanded,
@@ -110,7 +110,7 @@ fun UnosEkran(navController: NavController, dao: RacunDao, prefs: SharedPreferen
         // UNOS IZNOSA
         OutlinedTextField(
             value = iznosTekst,
-            onValueChange = { if (it.all { char -> char.isDigit() || char == '.' }) iznosTekst = it },
+            onValueChange = { if (it.matches(Regex("\\d{0,6}(\\.\\d{0,2})?"))) iznosTekst = it },
             label = { Text("Iznos računa (KM)", color = Color.Gray) },
             textStyle = androidx.compose.ui.text.TextStyle(fontSize = 20.sp),
             colors = OutlinedTextFieldDefaults.colors(
