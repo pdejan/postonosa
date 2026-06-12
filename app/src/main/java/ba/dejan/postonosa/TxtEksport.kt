@@ -3,9 +3,9 @@ package ba.dejan.postonosa
 import android.annotation.SuppressLint
 import android.content.ContentValues
 import android.content.Context
+import android.net.Uri
 import android.os.Environment
 import android.provider.MediaStore
-import android.widget.Toast
 import java.io.OutputStream
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -13,7 +13,8 @@ import java.util.Locale
 
 object TxtEksport {
     @SuppressLint("DefaultLocale")
-    fun generisiTxt(context: Context, podPutanja: String, racuni: List<Racun>, apoeni: List<String>, ukupnoFizicki: Double) {
+    // Vraća true samo ako je fajl stvarno snimljen — pozivalac smije obrisati bazu tek tada
+    fun generisiTxt(context: Context, podPutanja: String, racuni: List<Racun>, apoeni: List<String>, ukupnoFizicki: Double): Boolean {
         val prefs = context.getSharedPreferences("PostonosaPrefs", Context.MODE_PRIVATE)
         val radnikIme = prefs.getString("ime_prezime", "Nepoznat") ?: "Nepoznat"
         val radnikId = prefs.getString("radnik_id", "000") ?: "000"
@@ -69,7 +70,8 @@ object TxtEksport {
         sb.append("\n\n\n\n")
         sb.append("Predao: ____________________     Primio: ____________________\n")
         // SNIMANJE
-        try {
+        var uri: Uri? = null
+        return try {
             val datumVrijemeFajl = SimpleDateFormat("dd_MM_yyyy_HH_mm", Locale.getDefault()).format(Date())
             val siguranRadnikId = siguranDioImenaFajla(radnikId, "000")
             val sigurnoIme = siguranDioImenaFajla(radnikIme, "Nepoznat")
@@ -79,20 +81,26 @@ object TxtEksport {
                 put(MediaStore.MediaColumns.MIME_TYPE, "text/plain")
                 put(MediaStore.MediaColumns.RELATIVE_PATH, "${Environment.DIRECTORY_DOWNLOADS}/Postonosa/$podPutanja")
             }
-            val uri = context.contentResolver.insert(MediaStore.Files.getContentUri("external"), contentValues)
-            if (uri != null) {
+            uri = context.contentResolver.insert(MediaStore.Files.getContentUri("external"), contentValues)
+            if (uri == null) {
+                false
+            } else {
                 val outputStream: OutputStream? = context.contentResolver.openOutputStream(uri)
-                if (outputStream != null) {
-                    outputStream.write(sb.toString().toByteArray())
-                    outputStream.close()
+                if (outputStream == null) {
+                    obrisiNedovrsenFajl(context, uri)
+                    false
+                } else {
+                    outputStream.use { it.write(sb.toString().toByteArray()) }
                     context.getSharedPreferences("PostonosaPrefs", Context.MODE_PRIVATE)
                         .edit()
                         .putString("zadnji_txt_uri", uri.toString())
                         .apply()
+                    true
                 }
             }
         } catch (e: Exception) {
-            Toast.makeText(context, "Greška pri snimanju TXT-a!", Toast.LENGTH_SHORT).show()
+            obrisiNedovrsenFajl(context, uri)
+            false
         }
     }
 }

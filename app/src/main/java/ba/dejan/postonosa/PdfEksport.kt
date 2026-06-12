@@ -6,16 +6,17 @@ import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.Typeface
 import android.graphics.pdf.PdfDocument
+import android.net.Uri
 import android.os.Environment
 import android.provider.MediaStore
-import android.widget.Toast
 import java.io.OutputStream
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
 object PdfEksport {
-    fun generisiPdf(context: Context, podPutanja: String, racuni: List<Racun>, apoeni: List<String>, ukupnoFizicki: Double) {
+    // Vraća true samo ako je fajl stvarno snimljen — pozivalac smije obrisati bazu tek tada
+    fun generisiPdf(context: Context, podPutanja: String, racuni: List<Racun>, apoeni: List<String>, ukupnoFizicki: Double): Boolean {
         val pdfDocument = PdfDocument()
         var stranicaBroj = 1
         var pageInfo = PdfDocument.PageInfo.Builder(595, 842, stranicaBroj).create()
@@ -147,7 +148,8 @@ object PdfEksport {
         canvas.drawLine(350f, yPos, 555f, yPos, paint)
         canvas.drawText("Primio:", 350f, yPos + 16f, paint)
         pdfDocument.finishPage(page)
-        try {
+        var uri: Uri? = null
+        return try {
             val datumVrijemeFajl = SimpleDateFormat("dd_MM_yyyy_HH_mm", Locale.getDefault()).format(Date())
             val siguranRadnikId = siguranDioImenaFajla(radnikId, "000")
             val sigurnoIme = siguranDioImenaFajla(radnikIme, "Nepoznat")
@@ -157,22 +159,37 @@ object PdfEksport {
                 put(MediaStore.MediaColumns.MIME_TYPE, "application/pdf")
                 put(MediaStore.MediaColumns.RELATIVE_PATH, "${Environment.DIRECTORY_DOWNLOADS}/Postonosa/$podPutanja")
             }
-            val uri = context.contentResolver.insert(MediaStore.Files.getContentUri("external"), contentValues)
-            if (uri != null) {
+            uri = context.contentResolver.insert(MediaStore.Files.getContentUri("external"), contentValues)
+            if (uri == null) {
+                false
+            } else {
                 val outputStream: OutputStream? = context.contentResolver.openOutputStream(uri)
-                if (outputStream != null) {
-                    pdfDocument.writeTo(outputStream)
-                    outputStream.close()
+                if (outputStream == null) {
+                    obrisiNedovrsenFajl(context, uri)
+                    false
+                } else {
+                    outputStream.use { pdfDocument.writeTo(it) }
                     context.getSharedPreferences("PostonosaPrefs", Context.MODE_PRIVATE)
                         .edit()
                         .putString("zadnji_pdf_uri", uri.toString())
                         .apply()
+                    true
                 }
             }
         } catch (e: Exception) {
-            Toast.makeText(context, "Greška pri snimanju PDF-a!", Toast.LENGTH_SHORT).show()
+            obrisiNedovrsenFajl(context, uri)
+            false
         } finally {
             pdfDocument.close()
         }
+    }
+}
+// Ako je MediaStore unos kreiran ali pisanje nije uspjelo, ukloni prazan fajl da ne ostane smeće u Downloads
+fun obrisiNedovrsenFajl(context: Context, uri: Uri?) {
+    if (uri == null) return
+    try {
+        context.contentResolver.delete(uri, null, null)
+    } catch (e: Exception) {
+        // ignoriši — fajl ostaje, ali eksport je svakako prijavljen kao neuspio
     }
 }

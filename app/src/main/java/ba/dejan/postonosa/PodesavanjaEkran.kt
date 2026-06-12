@@ -46,6 +46,7 @@ fun PodesavanjaEkran(navController: NavController, prefs: SharedPreferences, dao
     val coroutineScope = rememberCoroutineScope()
     var uslugeList by remember { mutableStateOf(ucitajUsluge(prefs)) }
     var prikaziDialogZaNovuUslugu by remember { mutableStateOf(false) }
+    var prikaziDialogOdjave by remember { mutableStateOf(false) }
     var tekstNoveUsluge by remember { mutableStateOf("") }
     var bezProvizijeCheckbox by remember { mutableStateOf(false) }
     val ime = prefs.getString("ime_prezime", "Nepoznat") ?: "Nepoznat"
@@ -94,21 +95,44 @@ fun PodesavanjaEkran(navController: NavController, prefs: SharedPreferences, dao
                 Text("Pošta: $posta", fontSize = 16.sp)
                 Spacer(modifier = Modifier.height(16.dp))
                 Button(
-                    onClick = {
-                        dao.obrisiSve()
-                        Sesija.pocetakKorisnika.value = System.currentTimeMillis()
-                        Sesija.osvjeziBazu.value += 1
-                        prefs.edit().clear().apply()
-                        navController.navigate("login") {
-                            popUpTo(0)
-                        }
-                    },
+                    onClick = { prikaziDialogOdjave = true },
                     colors = ButtonDefaults.buttonColors(containerColor = Color.Red),
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Text("ODJAVI SE", color = Color.White, fontWeight = FontWeight.Bold)
                 }
             }
+        }
+        // DIALOG ZA POTVRDU ODJAVE
+        if (prikaziDialogOdjave) {
+            AlertDialog(
+                onDismissRequest = { prikaziDialogOdjave = false },
+                containerColor = Color.White,
+                title = { Text("Odjava", fontWeight = FontWeight.Bold, color = Color.Black) },
+                text = { Text("Odjava briše sve unesene uplate i podatke korisnika. Nastavi?", fontSize = 16.sp, color = Color.Black) },
+                confirmButton = {
+                    Button(
+                        onClick = {
+                            prikaziDialogOdjave = false
+                            dao.obrisiSve()
+                            Sesija.pocetakKorisnika.value = System.currentTimeMillis()
+                            Sesija.osvjeziBazu.value += 1
+                            prefs.edit().clear().apply()
+                            navController.navigate("login") {
+                                popUpTo(0)
+                            }
+                        },
+                        colors = ButtonDefaults.buttonColors(containerColor = Color.Red)
+                    ) {
+                        Text("ODJAVI SE", color = Color.White, fontWeight = FontWeight.Bold)
+                    }
+                },
+                dismissButton = {
+                    TextButton(onClick = { prikaziDialogOdjave = false }) {
+                        Text("Odustani", color = Color.Gray)
+                    }
+                }
+            )
         }
         Card(
             modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp),

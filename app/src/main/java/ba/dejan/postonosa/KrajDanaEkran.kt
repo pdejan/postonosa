@@ -93,23 +93,28 @@ fun KrajDanaEkran(navController: NavController, dao: RacunDao, prefs: SharedPref
             val trebaTxt = prefs.getBoolean("export_txt", true)
             //Ocisti stare prefs za email prije snimanja novih
             prefs.edit().remove("zadnji_pdf_uri").remove("zadnji_txt_uri").apply()
-            if (trebaPdf) {
-                PdfEksport.generisiPdf(context, imeFoldera, racuni, listaApoena, fizickiNovac)
+            val pdfUspio = !trebaPdf || PdfEksport.generisiPdf(context, imeFoldera, racuni, listaApoena, fizickiNovac)
+            val txtUspio = !trebaTxt || TxtEksport.generisiTxt(context, imeFoldera, racuni, listaApoena, fizickiNovac)
+            if (pdfUspio && txtUspio) {
+                // Jedan toast
+                val poruka = when {
+                    trebaPdf && trebaTxt -> "Fajlovi sačuvani!"
+                    trebaPdf -> "PDF sačuvan!"
+                    trebaTxt -> "TXT sačuvan!"
+                    else -> "Fajlovi sačuvani!" //fallback
+                }
+                Toast.makeText(context, poruka, Toast.LENGTH_SHORT).show()
+                dao.obrisiSve()
+                Sesija.postaviPocetakKorisnika(prefs)
+                navController.popBackStack()
+            } else {
+                // Eksport pao — uplate ostaju u bazi, poštar može pokušati ponovo
+                val neuspjelo = listOfNotNull(
+                    if (!pdfUspio) "PDF" else null,
+                    if (!txtUspio) "TXT" else null
+                ).joinToString(" i ")
+                Toast.makeText(context, "Greška pri snimanju: $neuspjelo! Uplate nisu obrisane, pokušaj ponovo.", Toast.LENGTH_LONG).show()
             }
-            if (trebaTxt) {
-                TxtEksport.generisiTxt(context, imeFoldera, racuni, listaApoena, fizickiNovac)
-            }
-            // Jedan toast
-            val poruka = when {
-                trebaPdf && trebaTxt -> "Fajlovi sačuvani!"
-                trebaPdf -> "PDF sačuvan!"
-                trebaTxt -> "TXT sačuvan!"
-                else -> "Fajlovi sačuvani!" //fallback
-            }
-            Toast.makeText(context, poruka, Toast.LENGTH_SHORT).show()
-            dao.obrisiSve()
-            Sesija.postaviPocetakKorisnika(prefs)
-            navController.popBackStack()
 
         } else {
             // KASA SE NE SLAZE
