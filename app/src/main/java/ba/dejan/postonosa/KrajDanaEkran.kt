@@ -32,11 +32,16 @@ import androidx.compose.ui.text.style.TextOverflow
 import ba.dejan.postonosa.ui.theme.GlavnaBoja
 import ba.dejan.postonosa.ui.theme.Pozadina
 import ba.dejan.postonosa.ui.theme.SporednaBoja
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 @Composable
 fun KrajDanaEkran(navController: NavController, dao: RacunDao, prefs: SharedPreferences) {
     val context = LocalContext.current
     val focusManager = LocalFocusManager.current
+    val coroutineScope = rememberCoroutineScope()
+    var snimanje by remember { mutableStateOf(false) }
     val ukupnoOcekivano = dao.ukupnoZaRazduzenje() ?: 0.0
     val racuni = dao.dohvatiSve()
     // Svi apoeni
@@ -93,27 +98,35 @@ fun KrajDanaEkran(navController: NavController, dao: RacunDao, prefs: SharedPref
             val trebaTxt = prefs.getBoolean("export_txt", true)
             //Ocisti stare prefs za email prije snimanja novih
             prefs.edit().remove("zadnji_pdf_uri").remove("zadnji_txt_uri").apply()
-            val pdfUspio = !trebaPdf || PdfEksport.generisiPdf(context, imeFoldera, racuni, listaApoena, fizickiNovac)
-            val txtUspio = !trebaTxt || TxtEksport.generisiTxt(context, imeFoldera, racuni, listaApoena, fizickiNovac)
-            if (pdfUspio && txtUspio) {
-                // Jedan toast
-                val poruka = when {
-                    trebaPdf && trebaTxt -> "Fajlovi sačuvani!"
-                    trebaPdf -> "PDF sačuvan!"
-                    trebaTxt -> "TXT sačuvan!"
-                    else -> "Fajlovi sačuvani!" //fallback
+            // Disk I/O eksporta ide sa glavne niti da ne zamrzne ekran na sporijem telefonu
+            snimanje = true
+            coroutineScope.launch {
+                val (pdfUspio, txtUspio) = withContext(Dispatchers.IO) {
+                    val pdf = !trebaPdf || PdfEksport.generisiPdf(context, imeFoldera, racuni, listaApoena, fizickiNovac)
+                    val txt = !trebaTxt || TxtEksport.generisiTxt(context, imeFoldera, racuni, listaApoena, fizickiNovac)
+                    pdf to txt
                 }
-                Toast.makeText(context, poruka, Toast.LENGTH_SHORT).show()
-                dao.obrisiSve()
-                Sesija.postaviPocetakKorisnika(prefs)
-                navController.popBackStack()
-            } else {
-                // Eksport nije uspio — uplate ostaju u bazi
-                val neuspjelo = listOfNotNull(
-                    if (!pdfUspio) "PDF" else null,
-                    if (!txtUspio) "TXT" else null
-                ).joinToString(" i ")
-                Toast.makeText(context, "Greška pri snimanju: $neuspjelo! Uplate nisu obrisane, pokušaj ponovo.", Toast.LENGTH_LONG).show()
+                snimanje = false
+                if (pdfUspio && txtUspio) {
+                    // Jedan toast
+                    val poruka = when {
+                        trebaPdf && trebaTxt -> "Fajlovi sačuvani!"
+                        trebaPdf -> "PDF sačuvan!"
+                        trebaTxt -> "TXT sačuvan!"
+                        else -> "Fajlovi sačuvani!" //fallback
+                    }
+                    Toast.makeText(context, poruka, Toast.LENGTH_SHORT).show()
+                    dao.obrisiSve()
+                    Sesija.postaviPocetakKorisnika(prefs)
+                    navController.popBackStack()
+                } else {
+                    // Eksport nije uspio — uplate ostaju u bazi
+                    val neuspjelo = listOfNotNull(
+                        if (!pdfUspio) "PDF" else null,
+                        if (!txtUspio) "TXT" else null
+                    ).joinToString(" i ")
+                    Toast.makeText(context, "Greška pri snimanju: $neuspjelo! Uplate nisu obrisane, pokušaj ponovo.", Toast.LENGTH_LONG).show()
+                }
             }
 
         } else {
@@ -130,7 +143,7 @@ fun KrajDanaEkran(navController: NavController, dao: RacunDao, prefs: SharedPref
             modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            IconButton(onClick = { navController.popBackStack() }) {
+            IconButton(onClick = { navController.popBackStack() }, enabled = !snimanje) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                     contentDescription = "Nazad",
@@ -195,17 +208,33 @@ fun KrajDanaEkran(navController: NavController, dao: RacunDao, prefs: SharedPref
             Spacer(modifier = Modifier.height(24.dp))
             Button(
                 onClick = { zavrsiSmjenuLogika() },
+                enabled = !snimanje,
                 modifier = Modifier.fillMaxWidth().height(60.dp),
                 colors = ButtonDefaults.buttonColors(containerColor = GlavnaBoja)
             ) {
-                Text(
-                    text = "ZAVRŠI RAD I SNIMI PREGLED",
-                    fontSize = 18.sp,
-                    color = SporednaBoja,
-                    fontWeight = FontWeight.Bold,
-                    overflow = TextOverflow.Ellipsis,
-                    maxLines = 1
-                )
+                if (snimanje) {
+                    CircularProgressIndicator(
+                        modifier = Modifier.size(24.dp),
+                        color = SporednaBoja,
+                        strokeWidth = 2.dp
+                    )
+                    Spacer(modifier = Modifier.width(12.dp))
+                    Text(
+                        text = "SNIMAM...",
+                        fontSize = 18.sp,
+                        color = SporednaBoja,
+                        fontWeight = FontWeight.Bold
+                    )
+                } else {
+                    Text(
+                        text = "ZAVRŠI RAD I SNIMI PREGLED",
+                        fontSize = 18.sp,
+                        color = SporednaBoja,
+                        fontWeight = FontWeight.Bold,
+                        overflow = TextOverflow.Ellipsis,
+                        maxLines = 1
+                    )
+                }
             }
             Spacer(modifier = Modifier.height(24.dp))
         }
