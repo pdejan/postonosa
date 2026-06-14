@@ -6,6 +6,8 @@ import java.io.File
 
 data class FiksnaProvizija(val id: String, val naziv: String, val iznos: Double)
 object Kalkulator {
+    // Zaokruži na 2 decimale da procentualna pravila ne proizvedu pod-centne iznose
+    private fun zaokruziNaFeninge(iznos: Double): Double = Math.round(iznos * 100.0) / 100.0
     private fun procitajJson(context: Context): String {
         val lokalniFajl = File(context.filesDir, "naknada.json")
         return if (lokalniFajl.exists()) {
@@ -56,7 +58,7 @@ object Kalkulator {
                 iznos <= 2000.0 -> 3.50
                 iznos <= 5000.0 -> 4.00
                 iznos <= 10000.0 -> 5.00
-                else -> iznos * (0.1 / 100.0)
+                else -> zaokruziNaFeninge(iznos * (0.1 / 100.0))
             }
         }
     }
@@ -82,6 +84,6 @@ object Kalkulator {
                 break
             }
         }
-        return izracunataProvizija
+        return zaokruziNaFeninge(izracunataProvizija)
     }
 }

@@ -36,7 +36,20 @@ class KalkulatorTest {
         // Zadnje pravilo: 0.10%
         assertEquals(20.0, Kalkulator.izracunajIzJsona(stvarniJson, 20000.0), 1e-9)
         // Maksimalan iznos koji UnosEkran dozvoljava (regex limit od 999999.99)
-        assertEquals(999.99999, Kalkulator.izracunajIzJsona(stvarniJson, 999999.99), 1e-6)
+        // 999999.99 * 0.001 = 999.99999 → zaokruženo na feninge = 1000.00
+        assertEquals(1000.00, Kalkulator.izracunajIzJsona(stvarniJson, 999999.99), 1e-9)
+    }
+
+    @Test
+    fun provizijaSeUvijekVracaNaFeningPreciznost() {
+        // 0.10% od 10005 = 10.005 (pola feninga) → mora se zaokružiti na 10.01,
+        // inače zbir više uplata ne može da se poklopi sa fizičkim novcem na kraju dana
+        val provizija = Kalkulator.izracunajIzJsona(stvarniJson, 10005.0)
+        assertEquals(10.01, provizija, 1e-9)
+        // Tri takve uplate moraju dati zbir koji je tačno na fening
+        val ukupnoPoUplati = 10005.0 + provizija
+        val zbir = 3 * ukupnoPoUplati
+        assertEquals(0.0, Math.round(zbir * 100.0) / 100.0 - zbir, 1e-9)
     }
 
     @Test
