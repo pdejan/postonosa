@@ -12,3 +12,8 @@ captures/
 *.pyc
 *.log
 google-services.json
+/app/release/
+*.apk
+*.aab
+*.keystore
+*.jks
