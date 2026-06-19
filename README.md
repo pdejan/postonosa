@@ -1,5 +1,9 @@
 # Poštonoša (Android Aplikacija)
 
+<a href="https://play.google.com/store/apps/details?id=ba.dejan.postonosa">
+  <img src="https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png" alt="Get it on Google Play" width="200">
+</a>
+
 **Poštonoša** je aplikacija napravljena za poštare u Bosni i Hercegovini (Pošte Srpske). Aplikacija omogućava jednostavnu evidenciju i unos uplata režijskih računa na dostavnom rejonu te generisanje pregleda uz par pogodnosti i sve to offline.
 
 ## Glavne funkcije

@@ -148,7 +148,7 @@ fun ListaEkran(navController: NavController, dao: RacunDao) {
             },
             dismissButton = {
                 TextButton(onClick = { racunZaBrisanje = null }) {
-                    Text("Odustani", color = Color.Gray)
+                    Text("ODUSTANI", color = Color.Gray)
                 }
             }
         )

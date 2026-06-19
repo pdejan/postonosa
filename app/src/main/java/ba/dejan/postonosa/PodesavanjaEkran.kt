@@ -146,7 +146,7 @@ fun PodesavanjaEkran(navController: NavController, prefs: SharedPreferences, dao
                 },
                 dismissButton = {
                     TextButton(onClick = { prikaziDialogOdjave = false }) {
-                        Text("Odustani", color = Color.Gray)
+                        Text("ODUSTANI", color = Color.Gray)
                     }
                 }
             )
